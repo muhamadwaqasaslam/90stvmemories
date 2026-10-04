@@ -6,6 +6,7 @@ import { Cover } from "../../../../components/PostCard";
 import { ViewBeacon } from "../../../../components/Tracked";
 import { MailForm } from "../../../../components/MailForm";
 import { Chevron } from "../../../../components/icons";
+import { SITE_URL } from "../../../../lib/site";
 import { Prose } from "../../../../lib/render";
 import { fmtDate } from "../../../../lib/dates";
 import { getPostBySlug, readMins } from "../../../../lib/posts";
@@ -20,8 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 function Share({ title, slug }: { title: string; slug: string }) {
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "https://90stvmemories.vercel.app";
-  const url = encodeURIComponent(`${site}/posts/${slug}`);
+  const url = encodeURIComponent(`${SITE_URL}/posts/${slug}`);
   const t = encodeURIComponent(title);
   const items = [
     ["Share", `https://www.facebook.com/sharer/sharer.php?u=${url}`, "bg-[#3b5998]"],
