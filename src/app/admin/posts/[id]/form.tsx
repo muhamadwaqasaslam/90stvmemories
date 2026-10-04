@@ -11,7 +11,6 @@ const input =
 
 export function EditorForm({ post }: { post?: Post }) {
   const [error, action, pending] = useActionState(save, null);
-
   return (
     <form action={action} className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
       <input type="hidden" name="id" value={post?.id ?? ""} />
@@ -33,7 +32,8 @@ export function EditorForm({ post }: { post?: Post }) {
           />
         </label>
         <p className="text-sm text-ink/45">
-          Formatting: blank line = new paragraph · <code>## Heading</code> · <code>&gt; Quote</code> · <code>- List item</code> · <code>**bold**</code>
+          Formatting: blank line = new paragraph · <code>## Heading</code> · <code>&gt; Quote</code> · <code>- List item</code> ·{" "}
+          <code>**bold**</code> · <code>![caption](/images/pic.svg)</code> image · <code>[text](https://…)</code> link
         </p>
       </div>
 
@@ -56,7 +56,7 @@ export function EditorForm({ post }: { post?: Post }) {
         </label>
         <label className="block text-sm font-semibold">
           Cover image URL (optional)
-          <input name="imageUrl" type="url" defaultValue={post?.imageUrl} placeholder="https://…" className={input} />
+          <input name="imageUrl" type="text" defaultValue={post?.imageUrl} placeholder="https://… or /images/cover.svg" className={input} />
         </label>
         <label className="block text-sm font-semibold">
           Page URL

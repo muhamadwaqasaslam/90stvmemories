@@ -110,3 +110,30 @@ body {
   font-weight: 700;
   color: var(--color-ink);
 }
+
+/* Article images, links and captions */
+.prose-90s figure {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.prose-90s figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgba(28, 32, 51, 0.06), 0 14px 32px -16px rgba(28, 32, 51, 0.35);
+}
+.prose-90s figcaption {
+  margin-top: 0.75em;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(28, 32, 51, 0.55);
+}
+.prose-90s a {
+  color: var(--color-pink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-90s a:hover {
+  text-decoration-thickness: 2px;
+}
