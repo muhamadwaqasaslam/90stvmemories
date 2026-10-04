@@ -19,7 +19,7 @@ export function Header() {
         <Logo />
         <nav className="flex items-center gap-1 text-sm font-medium text-ink/70">
           <Link href="/#stories" className="rounded-full px-4 py-2 transition hover:bg-ink/5 hover:text-ink">Stories</Link>
-          <Link href="/#about" className="hidden rounded-full px-4 py-2 transition hover:bg-ink/5 hover:text-ink sm:block">About</Link>
+          <Link href="/about" className="rounded-full px-4 py-2 transition hover:bg-ink/5 hover:text-ink">About</Link>
         </nav>
       </div>
     </header>
@@ -31,6 +31,7 @@ export function Footer() {
     <footer className="mt-24 border-t border-ink/10 bg-white">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 py-10 text-center sm:px-6">
         <Logo />
+        <nav className="flex gap-5 text-sm font-medium text-ink/70"><Link href="/#stories" className="hover:text-pink">Stories</Link><Link href="/about" className="hover:text-pink">About</Link></nav>
         <p className="max-w-md text-sm text-ink/60">
           A love letter to the shows, tapes and Saturday mornings that raised a generation.
         </p>

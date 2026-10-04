@@ -65,11 +65,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           </div>
         </section>
 
-        <section id="about" className="mx-auto mt-20 max-w-3xl scroll-mt-20 px-4 text-center sm:px-6">
-          <h2 className="font-display text-2xl font-bold">About</h2>
+        <section className="mx-auto mt-20 max-w-3xl px-4 text-center sm:px-6">
+          <h2 className="font-display text-2xl font-bold">Why 90s TV Memories?</h2>
           <p className="mt-3 text-lg leading-relaxed text-ink/65">
-            90s TV Memories is a small, friendly corner of the internet for everyone who remembers rabbit ears, cereal bowls and rewinding the tape. Short reads, big nostalgia.
+            A small, friendly corner of the internet for everyone who remembers rabbit ears, cereal bowls and rewinding the tape.
           </p>
+          <Link href="/about" className="mt-5 inline-block font-semibold text-pink hover:underline">Read our story →</Link>
         </section>
       </main>
       <Footer />

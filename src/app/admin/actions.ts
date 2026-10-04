@@ -53,7 +53,7 @@ export async function save(_: string | null, form: FormData): Promise<string | n
     excerpt: str("excerpt") || content.replace(/[#>*-]/g, "").slice(0, 160).trim() + "…",
     category: str("category") || "Memories",
     theme,
-    imageUrl: str("imageUrl") || undefined,
+    imageUrl: /^(https?:\/\/|\/(?!\/))[^\s"'()]+$/.test(str("imageUrl")) ? str("imageUrl") : undefined,
     status: str("status") === "draft" ? "draft" : "published",
     createdAt: existing?.createdAt ?? now,
     updatedAt: now,
