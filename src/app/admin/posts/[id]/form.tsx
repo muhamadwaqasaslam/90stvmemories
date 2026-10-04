@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { save } from "../../actions";
 import { THEMES } from "../../../../lib/themes";
@@ -68,17 +68,22 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
   const fileRef = useRef<HTMLInputElement>(null);
   const coverRef = useRef<HTMLInputElement>(null);
   const jobId = useRef(0);
-  const pendingSel = useRef<{ start: number; end: number } | null>(null);
+  const pendingSel = useRef<{ start: number; end: number; boxTop: number; pageTop: number } | null>(null);
 
-  /* Restore the caret after React re-renders a controlled textarea. */
-  useEffect(() => {
-    if (pendingSel.current && ta.current) {
-      const { start, end } = pendingSel.current;
-      ta.current.focus();
-      ta.current.setSelectionRange(start, end);
-      setSel({ start, end });
-      pendingSel.current = null;
+  /* Restore caret and scroll positions after React re-renders the controlled textarea. */
+  useLayoutEffect(() => {
+    const p = pendingSel.current;
+    const el = ta.current;
+    if (!p || !el) return;
+    pendingSel.current = null;
+    /* Don't steal focus from the caption box while someone is typing in it. */
+    if (document.activeElement?.tagName !== "INPUT") {
+      el.focus({ preventScroll: true });
+      el.setSelectionRange(p.start, p.end);
     }
+    el.scrollTop = p.boxTop;
+    window.scrollTo(window.scrollX, p.pageTop);
+    setSel({ start: p.start, end: p.end });
   }, [content]);
 
   const readSel = () => {
@@ -86,21 +91,27 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
     if (el) setSel({ start: el.selectionStart, end: el.selectionEnd });
   };
 
+  /* The textarea knows the true selection; state can lag a click behind. */
+  const liveSel = () => {
+    const el = ta.current;
+    return el ? { start: el.selectionStart, end: el.selectionEnd } : sel;
+  };
+
   function apply(value: string, start: number, end = start) {
-    pendingSel.current = { start, end };
+    pendingSel.current = { start, end, boxTop: ta.current?.scrollTop ?? 0, pageTop: window.scrollY };
     setContent(value);
   }
 
   /* ---------- text formatting ---------- */
   function wrap(before: string, after: string, placeholder: string) {
-    const { start, end } = sel;
+    const { start, end } = liveSel();
     const chosen = content.slice(start, end) || placeholder;
     const next = content.slice(0, start) + before + chosen + after + content.slice(end);
     apply(next, start + before.length, start + before.length + chosen.length);
   }
 
   function lineBlock(prefix: string, perLine: boolean) {
-    const { start, end } = sel;
+    const { start, end } = liveSel();
     const ls = content.lastIndexOf("\n", start - 1) + 1;
     let le = content.indexOf("\n", end);
     if (le === -1) le = content.length;
@@ -115,9 +126,9 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
   }
 
   function addLink() {
+    const { start, end } = liveSel();
     const url = window.prompt("Link address (https://…)");
     if (!url) return;
-    const { start, end } = sel;
     const text = content.slice(start, end) || "link text";
     const md = `[${text}](${url})`;
     apply(content.slice(0, start) + md + content.slice(end), start + md.length);
@@ -240,7 +251,10 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
               ))}
             </div>
             {tab === "write" && (
-              <>
+              <div
+                className="contents"
+                onMouseDown={(e) => { if ((e.target as HTMLElement).closest("button")) e.preventDefault(); }}
+              >
                 <button type="button" className={btn} title="Bold" aria-label="Bold" onClick={() => wrap("**", "**", "bold text")}><b>B</b></button>
                 <button type="button" className={btn} title="Italic" aria-label="Italic" onClick={() => wrap("*", "*", "italic text")}><i>I</i></button>
                 <button type="button" className={btn} title="Heading" aria-label="Heading" onClick={() => lineBlock("## ", false)}>H2</button>
@@ -264,7 +278,7 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
                     e.target.value = "";
                   }}
                 />
-              </>
+              </div>
             )}
           </div>
 
