@@ -1,0 +1,57 @@
+import Link from "next/link";
+import { AdminShell } from "../../../components/admin/Shell";
+import { getAllPosts } from "../../../lib/posts";
+import { fmtDate } from "../../../lib/dates";
+import { remove } from "../actions";
+
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Articles", robots: { index: false } };
+
+export default async function PostsAdmin({ searchParams }: { searchParams: Promise<{ saved?: string; deleted?: string }> }) {
+  const sp = await searchParams;
+  const posts = await getAllPosts();
+
+  return (
+    <AdminShell active="/admin/posts">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-pink">BROADCAST DESK</p>
+          <h1 className="font-display text-3xl font-bold sm:text-4xl">Articles</h1>
+        </div>
+        <Link href="/admin/posts/new" className="pop pop-hover rounded-full bg-pink px-6 py-3 font-semibold text-white">
+          + New article
+        </Link>
+      </div>
+
+      {(sp.saved || sp.deleted) && (
+        <p role="status" className="mt-5 rounded-xl bg-emerald-50 px-4 py-3 font-bold text-emerald-600">
+          {sp.saved ? "Saved! Your article is on air." : "Article deleted."}
+        </p>
+      )}
+
+      <ul className="mt-6 space-y-3">
+        {posts.map((p) => (
+          <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl pop bg-white p-4 sm:p-5">
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold leading-snug">{p.title}</p>
+              <p className="mt-1 text-sm text-ink/55">
+                {p.category} · {fmtDate(p.createdAt)} ·{" "}
+                <span className={p.status === "published" ? "text-emerald-600" : "text-amber-600"}>{p.status}</span> · /posts/{p.slug}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-sm font-semibold">
+              {p.status === "published" && (
+                <Link href={`/posts/${p.slug}`} target="_blank" className="rounded-full px-3 py-2 hover:bg-ink/5">View</Link>
+              )}
+              <Link href={`/admin/posts/${p.id}`} className="rounded-full bg-ink px-4 py-2 text-white">Edit</Link>
+              <form action={remove}>
+                <input type="hidden" name="id" value={p.id} />
+                <button className="rounded-full border-2 border-pink/60 px-4 py-2 text-pink hover:bg-pink hover:text-white">Delete</button>
+              </form>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </AdminShell>
+  );
+}
