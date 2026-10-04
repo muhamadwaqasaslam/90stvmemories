@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { coverUrl } from "../lib/stock";
 import { Footer, Header } from "../components/SiteChrome";
-import { PostCard } from "../components/PostCard";
+import { Cover, PostCard, PostRow } from "../components/PostCard";
+import { TrackedLink } from "../components/Tracked";
 import { getPublished } from "../lib/posts";
 
 export const revalidate = 60;
@@ -11,66 +13,89 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
   const categories = [...new Set(all.map((p) => p.category))];
   const posts = cat ? all.filter((p) => p.category === cat) : all;
   const [featured, ...rest] = posts;
+  const columns = rest.slice(0, 3);
+  const grid = rest.slice(3, 11);
 
   return (
     <>
       <Header />
       <main>
-        <section className="relative overflow-hidden">
-          <div className="absolute -top-24 left-1/2 h-72 w-[40rem] -translate-x-1/2 rounded-full bg-pink/15 blur-3xl" />
-          <div className="absolute -top-10 right-0 h-60 w-60 rounded-full bg-cyan/15 blur-3xl" />
-          <div className="relative mx-auto max-w-3xl px-4 py-20 text-center sm:px-6 sm:py-28">
-            <p className="inline-block rounded-full bg-white px-4 py-1.5 text-sm font-medium text-ink/70 shadow-sm ring-1 ring-ink/10">
-              📼 Stories from the golden age of TV
-            </p>
-            <h1 className="mt-6 font-display text-4xl font-bold leading-tight sm:text-6xl">
-              Press play on your <span className="text-pink">childhood.</span>
-            </h1>
-            <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-ink/65">
-              Saturday morning cartoons, Friday night sitcoms and VHS rentals. The TV moments that raised a generation.
-            </p>
-            <Link
-              href="#stories"
-              className="mt-8 inline-block rounded-full bg-ink px-7 py-3.5 font-semibold text-white shadow-lg shadow-ink/20 transition hover:-translate-y-0.5 hover:bg-pink"
-            >
-              Start reading
-            </Link>
-          </div>
-        </section>
-
-        <section id="stories" className="scroll-mt-20">
-          <div className="mx-auto max-w-6xl px-4 pb-6 sm:px-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <h2 className="font-display text-2xl font-bold sm:text-3xl">Latest stories</h2>
-              <div className="flex flex-wrap gap-2">
-                <Chip href="/#stories" active={!cat}>All</Chip>
-                {categories.map((c) => (
-                  <Chip key={c} href={`/?cat=${encodeURIComponent(c)}#stories`} active={cat === c}>{c}</Chip>
-                ))}
-              </div>
-            </div>
-
+        {/* hero: navy-to-grey banner with the featured story */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-navy via-[#6b7aa0] to-[#8c8c8c]">
+          {featured && <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url(${coverUrl(featured)})` }} />}
+          <div className="relative mx-auto max-w-[1366px] px-6 py-20 lg:px-16 lg:py-28">
             {featured ? (
-              <div className="mt-8 space-y-8">
-                <PostCard post={featured} featured />
-                {rest.length > 0 && (
-                  <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {rest.map((p) => <PostCard key={p.id} post={p} />)}
-                  </div>
-                )}
+              <div className="max-w-xl">
+                <Link href={`/?cat=${encodeURIComponent(featured.category)}#stories`} className="inline-block bg-white px-5 py-2 text-xs font-medium uppercase text-navy">
+                  {featured.category}
+                </Link>
+                <h1 className="mt-6 text-3xl leading-snug text-white sm:text-[39px] sm:leading-[54px]">{featured.title}</h1>
+                <p className="mt-4 line-clamp-3 font-serif text-lg text-white/90">{featured.excerpt}</p>
+                <TrackedLink slug={featured.slug} className="mt-8 inline-block bg-white px-5 py-2 text-[11px] font-bold uppercase text-navy">
+                  Read story
+                </TrackedLink>
+                <div className="mt-14 flex gap-3" aria-hidden>{[0, 1, 2, 3, 4, 5].map((i) => <span key={i} className={`h-3 w-3 rounded-full border-2 border-white ${i === 0 ? "bg-white" : ""}`} />)}</div>
               </div>
             ) : (
-              <p className="mt-10 rounded-2xl border border-dashed border-ink/20 p-10 text-center text-ink/60">No stories yet. Check back soon.</p>
+              <h1 className="text-3xl text-white sm:text-[39px]">Press play on your childhood.</h1>
             )}
           </div>
         </section>
 
-        <section className="mx-auto mt-20 max-w-3xl px-4 text-center sm:px-6">
-          <h2 className="font-display text-2xl font-bold">Why 90s TV Memories?</h2>
-          <p className="mt-3 text-lg leading-relaxed text-ink/65">
-            A small, friendly corner of the internet for everyone who remembers rabbit ears, cereal bowls and rewinding the tape.
-          </p>
-          <Link href="/about" className="mt-5 inline-block font-semibold text-pink hover:underline">Read our story →</Link>
+        {/* three columns: image story + list */}
+        {columns.length > 0 && (
+          <section className="mx-auto max-w-[1366px] px-6 py-16 lg:px-16">
+            <div className="grid gap-10 md:grid-cols-3">
+              {columns.map((p, i) => {
+                const more = grid.slice(i * 2, i * 2 + 2);
+                return (
+                  <div key={p.id} className="border-t-2 border-black/60 pt-2">
+                    <p className="text-[19px] uppercase">{p.category}</p>
+                    <TrackedLink slug={p.slug} className="group mt-4 block">
+                      <Cover post={p} />
+                      <h3 className="mt-4 font-serif text-xl capitalize leading-[25px] group-hover:text-navy">{p.title}</h3>
+                      <p className="mt-2 font-condensed text-sm capitalize text-slate">{p.excerpt.slice(0, 60)}</p>
+                    </TrackedLink>
+                    <div className="mt-4">{more.map((m) => <PostRow key={m.id} post={m} />)}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* 8-up card grid on grey */}
+        <section id="stories" className="scroll-mt-4 bg-[#ececee] py-16">
+          <div className="mx-auto max-w-[1366px] px-6 lg:px-16">
+            <h2 className="text-center text-[40px] uppercase leading-tight">Latest stories</h2>
+            <div id="topics" className="mt-6 flex flex-wrap justify-center gap-3 scroll-mt-4">
+              <Chip href="/#stories" active={!cat}>All</Chip>
+              {categories.map((c) => (
+                <Chip key={c} href={`/?cat=${encodeURIComponent(c)}#stories`} active={cat === c}>{c}</Chip>
+              ))}
+            </div>
+            {posts.length > 0 ? (
+              <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                {posts.map((p) => <PostCard key={p.id} post={p} />)}
+              </div>
+            ) : (
+              <p className="mt-10 border border-dashed border-black/30 p-10 text-center">No stories yet. Check back soon.</p>
+            )}
+          </div>
+        </section>
+
+        {/* split: grey image block + about call-out */}
+        <section className="grid md:grid-cols-2">
+          <div className="min-h-64 bg-[#c4c4c4]">
+            {featured && <Cover post={featured} big />}
+          </div>
+          <div className="bg-[#ececee] px-8 py-16 text-center md:px-20">
+            <h2 className="text-[40px] uppercase leading-tight">Why 90s TV Memories?</h2>
+            <p className="mx-auto mt-6 max-w-md font-serif text-xl leading-8">
+              A small, friendly corner of the internet for everyone who remembers rabbit ears, cereal bowls and rewinding the tape.
+            </p>
+            <Link href="/about" className="mt-8 inline-block bg-navy px-8 py-3 text-[15px] font-bold uppercase text-white">Our story</Link>
+          </div>
         </section>
       </main>
       <Footer />
@@ -82,7 +107,7 @@ function Chip({ href, active, children }: { href: string; active: boolean; child
   return (
     <Link
       href={href}
-      className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${active ? "bg-ink text-white" : "bg-white text-ink/70 ring-1 ring-ink/10 hover:bg-ink/5"}`}
+      className={`px-5 py-2 font-condensed text-sm font-bold uppercase transition ${active ? "bg-navy text-white" : "bg-white text-black hover:bg-navy hover:text-white"}`}
     >
       {children}
     </Link>

@@ -3,15 +3,22 @@
 @theme inline {
   --color-ink: #1c2033;
   --color-night: #10122a;
-  --color-paper: #faf8f5;
-  --color-pink: #f43f7a;
-  --color-cyan: #2ec4e6;
+  --color-paper: #eef2f6;
+  --color-pink: #2b4886;
+  --color-cyan: #5b7bb5;
   --color-sun: #ffd24a;
   --color-grape: #6a2cff;
   --color-mint: #4cc38a;
   --font-display: var(--font-poppins), system-ui, sans-serif;
   --font-logo: var(--font-bungee), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
+  --color-navy: #2b4886;
+  --color-mist: #eef2f6;
+  --color-slate: #4d4d4d;
+  --font-head: var(--font-titillium), system-ui, sans-serif;
+  --font-serif: var(--font-crimson), Georgia, serif;
+  --font-condensed: var(--font-roboto-cond), system-ui, sans-serif;
+  --font-script: var(--font-yellowtail), cursive;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
@@ -146,3 +153,34 @@ body {
 .prose-90s a:hover {
   text-decoration-thickness: 2px;
 }
+
+/* Figma look: headings in Titillium, body copy in Crimson for article text */
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 400;
+}
+.prose-90s {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #000;
+}
+.prose-90s h2, .prose-90s h3 { font-family: var(--font-head); color: var(--color-navy); font-weight: 400; }
+.prose-90s blockquote { border-left-color: var(--color-navy); background: var(--color-mist); border-radius: 0; }
+.prose-90s li::before { background: var(--color-navy); }
+.prose-90s a { color: var(--color-navy); }
+.prose-90s figure img, .prose-90s figure video { border-radius: 0; box-shadow: none; }
+
+/* Admin: same navy / square-corner look as the public site */
+.admin-ui .font-display { font-family: var(--font-head); font-weight: 600; }
+.admin-ui a.rounded-full, .admin-ui button.rounded-full, .admin-ui label.rounded-full,
+.admin-ui input, .admin-ui select, .admin-ui textarea,
+.admin-ui .rounded-xl, .admin-ui .rounded-2xl, .admin-ui .rounded-3xl, .admin-ui .rounded-lg,
+.admin-ui div.rounded-full.p-0\.5 { border-radius: 2px; }
+.admin-ui .pop {
+  border: 0;
+  border-radius: 0;
+  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
+}
+.admin-ui .pop-hover:hover { transform: translateY(-2px); box-shadow: 6px 8px 16px rgba(0, 0, 0, 0.2); }
+.admin-ui ::selection { background: var(--color-navy); }

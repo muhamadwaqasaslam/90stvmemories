@@ -46,7 +46,7 @@ export default async function PostsAdmin({ searchParams }: { searchParams: Promi
               <Link href={`/admin/posts/${p.id}`} className="rounded-full bg-ink px-4 py-2 text-white">Edit</Link>
               <form action={remove}>
                 <input type="hidden" name="id" value={p.id} />
-                <button className="rounded-full border-2 border-pink/60 px-4 py-2 text-pink hover:bg-pink hover:text-white">Delete</button>
+                <button className="rounded-full border-2 border-red-600/60 px-4 py-2 text-red-600 hover:bg-red-600 hover:text-white">Delete</button>
               </form>
             </div>
           </li>

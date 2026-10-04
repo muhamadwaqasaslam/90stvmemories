@@ -427,7 +427,7 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
               {coverBusy ? "Uploading…" : cover ? "Change" : "Upload cover"}
             </button>
             {cover && (
-              <button type="button" onClick={() => setCover("")} className="rounded-full px-3 py-2 text-sm font-semibold text-pink hover:bg-pink/10">
+              <button type="button" onClick={() => setCover("")} className="rounded-full px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-600/10">
                 Remove
               </button>
             )}

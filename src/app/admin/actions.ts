@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { COOKIE, checkPassword, isAuthed, makeToken } from "../../lib/auth";
 import { deletePost, getAllPosts, getPostById, savePost, slugify, type Post } from "../../lib/posts";
+import { deleteMessage, setRead } from "../../lib/messages";
 import { THEMES, type ThemeKey } from "../../lib/themes";
 
 async function requireAdmin() {
@@ -72,4 +73,16 @@ export async function remove(form: FormData) {
   revalidatePath("/");
   if (post) revalidatePath(`/posts/${post.slug}`);
   redirect("/admin/posts?deleted=1");
+}
+
+export async function markMessage(form: FormData) {
+  await requireAdmin();
+  await setRead(String(form.get("id") ?? ""), form.get("read") === "1");
+  revalidatePath("/admin/messages");
+}
+
+export async function removeMessage(form: FormData) {
+  await requireAdmin();
+  await deleteMessage(String(form.get("id") ?? ""));
+  revalidatePath("/admin/messages");
 }

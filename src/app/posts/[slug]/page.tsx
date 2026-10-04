@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { coverUrl } from "../../../lib/stock";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Footer, Header } from "../../../components/SiteChrome";
-import { Cover, PostCard } from "../../../components/PostCard";
+import { FooterColumns, Header } from "../../../components/SiteChrome";
+import { Cover, PostRow } from "../../../components/PostCard";
 import { ViewBeacon } from "../../../components/Tracked";
 import { Prose } from "../../../lib/render";
 import { fmtDate } from "../../../lib/dates";
@@ -33,36 +34,41 @@ export default async function PostPage({ params }: Props) {
       <Header />
       <ViewBeacon slug={post.slug} />
       <main>
-        <article>
-          <header className="mx-auto max-w-4xl px-4 pt-10 sm:px-6">
-            <Link href="/#stories" className="text-sm font-medium text-ink/60 transition hover:text-pink">← All stories</Link>
-            <h1 className="mt-5 font-display text-3xl font-bold leading-tight sm:text-5xl">{post.title}</h1>
-            <p className="mt-4 text-ink/55">
+        {/* grey banner with centred title */}
+        <section className="relative grid min-h-64 place-items-center bg-[#8c8c8c] px-6 py-16 text-center">
+          <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: `url(${coverUrl(post)})` }} />
+          <div className="relative max-w-4xl">
+            <h1 className="text-3xl font-bold leading-tight text-white sm:text-5xl">{post.title}</h1>
+            <p className="mt-4 text-white/90">
               {fmtDate(post.createdAt)} · {readMins(post.content)} min read · {post.category}
             </p>
-            <div className="mt-8 h-60 overflow-hidden rounded-2xl shadow-lg shadow-ink/10 sm:h-96 [&>div]:h-full">
-              <Cover post={post} big />
-            </div>
-          </header>
-
-          <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-            <p className="mb-8 max-w-[68ch] text-xl leading-relaxed text-ink/70">{post.excerpt}</p>
-            <Prose content={post.content} />
           </div>
-        </article>
+        </section>
 
-        {more.length > 0 && (
-          <section className="border-t border-ink/10 bg-white/60">
-            <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-              <h2 className="font-display text-2xl font-bold sm:text-3xl">Keep reading</h2>
-              <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                {more.map((p) => <PostCard key={p.id} post={p} />)}
+        <section className="bg-mist pb-20">
+          <div className="mx-auto grid max-w-[1200px] gap-10 px-6 lg:grid-cols-[1fr_320px]">
+            <article className="-mt-0 bg-white p-8 shadow-[4px_6px_12px_rgba(0,0,0,0.15)] sm:p-12 lg:-mt-0">
+              <Link href="/blog" className="text-sm text-navy hover:underline">← All stories</Link> <span className="text-slate">·</span> <Link href={`/posts/${post.slug}/classic`} className="text-sm text-navy hover:underline">Wide layout</Link>
+              <p className="mb-8 mt-4 font-serif text-xl leading-relaxed text-slate">{post.excerpt}</p>
+              <Prose content={post.content} />
+            </article>
+
+            <aside className="space-y-8 lg:pt-16">
+              {more.length > 0 && (
+                <div className="bg-white p-6 shadow-[4px_6px_12px_rgba(0,0,0,0.15)]">
+                  <h2 className="text-2xl text-navy">Keep reading</h2>
+                  <div className="mt-4">{more.map((p) => <PostRow key={p.id} post={p} />)}</div>
+                </div>
+              )}
+              <div className="bg-white p-6 shadow-[4px_6px_12px_rgba(0,0,0,0.15)]">
+                <h2 className="text-2xl text-navy">More topics</h2>
+                <Link href="/#stories" className="mt-4 block bg-navy px-4 py-3 text-center font-serif text-lg text-white">Browse all stories »</Link>
               </div>
-            </div>
-          </section>
-        )}
+            </aside>
+          </div>
+        </section>
       </main>
-      <Footer />
+      <FooterColumns />
     </>
   );
 }

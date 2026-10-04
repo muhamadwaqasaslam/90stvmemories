@@ -1,39 +1,43 @@
 import { TrackedLink } from "./Tracked";
-import { themeOf } from "../lib/themes";
+import { coverUrl } from "../lib/stock";
 import { fmtDate } from "../lib/dates";
 import { readMins, type Post } from "../lib/posts";
 
 export function Cover({ post, big = false }: { post: Post; big?: boolean }) {
-  const t = themeOf(post.theme);
   return (
-    <div
-      className={`relative overflow-hidden bg-gradient-to-br ${t.bg} ${big ? "min-h-64 md:min-h-full" : "aspect-[16/10]"}`}
-      style={post.imageUrl ? { backgroundImage: `url(${post.imageUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
-    >
-      {!post.imageUrl && (
-        <span className={`absolute inset-0 grid place-items-center opacity-90 ${big ? "text-8xl" : "text-6xl"}`}>{t.emoji}</span>
-      )}
+    <div className={`relative overflow-hidden bg-[#c4c4c4] ${big ? "min-h-64 md:min-h-full" : "aspect-[16/10]"}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={coverUrl(post)} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
     </div>
   );
 }
 
-export function PostCard({ post, featured = false }: { post: Post; featured?: boolean }) {
+/** White card with soft drop shadow (Figma "Card" in the 8-up grid). */
+export function PostCard({ post }: { post: Post }) {
   return (
     <TrackedLink
       slug={post.slug}
-      className={`pop pop-hover group block overflow-hidden rounded-2xl bg-white ${featured ? "md:grid md:grid-cols-2" : "flex flex-col"}`}
+      className="group flex flex-col bg-white shadow-[6px_8px_14px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5"
     >
-      <Cover post={post} big={featured} />
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-wider text-pink">{post.category}</p>
-        <h3 className={`mt-2 font-display font-semibold leading-snug transition group-hover:text-pink ${featured ? "text-2xl sm:text-3xl" : "text-lg"}`}>
-          {post.title}
-        </h3>
-        <p className="mt-3 line-clamp-3 leading-relaxed text-ink/65">{post.excerpt}</p>
-        <p className="mt-auto pt-5 text-sm text-ink/50">
+      <Cover post={post} />
+      <div className="flex flex-1 flex-col items-center px-5 pb-6 pt-5 text-center">
+        <span className="border border-black px-3 py-0.5 font-condensed text-sm font-bold uppercase">{post.category}</span>
+        <h3 className="mt-4 font-serif text-lg leading-snug group-hover:text-navy">{post.title}</h3>
+        <p className="mt-2 line-clamp-3 font-serif text-base leading-6">{post.excerpt}</p>
+        <p className="mt-auto pt-4 font-condensed text-sm text-slate">
           {fmtDate(post.createdAt)} · {readMins(post.content)} min read
         </p>
       </div>
+    </TrackedLink>
+  );
+}
+
+/** Compact row: thumbnail + title, used in the 3-column list and sidebar. */
+export function PostRow({ post }: { post: Post }) {
+  return (
+    <TrackedLink slug={post.slug} className="group flex items-center gap-3 border-b border-black/20 py-3 last:border-0">
+      <div className="w-24 shrink-0"><Cover post={post} /></div>
+      <h4 className="font-serif text-base capitalize leading-5 group-hover:text-navy">{post.title}</h4>
     </TrackedLink>
   );
 }

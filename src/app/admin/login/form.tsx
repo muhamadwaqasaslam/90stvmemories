@@ -44,7 +44,7 @@ export function LoginForm() {
       {error && <p role="alert" className="rounded-lg bg-pink/10 px-3 py-2 text-sm font-medium text-pink">{error}</p>}
       <button
         disabled={pending}
-        className="w-full rounded-full bg-pink px-6 py-3 font-semibold text-white shadow-lg shadow-pink/25 transition hover:-translate-y-0.5 hover:bg-pink/90 disabled:opacity-60"
+        className="w-full bg-navy px-6 py-3 font-bold uppercase text-white transition hover:bg-black disabled:opacity-60"
       >
         {pending ? "Signing in…" : "Log in"}
       </button>
