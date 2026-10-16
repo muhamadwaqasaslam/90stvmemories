@@ -7,7 +7,7 @@ export function Cover({ post, big = false }: { post: Post; big?: boolean }) {
   return (
     <div className={`relative overflow-hidden bg-[#c4c4c4] ${big ? "min-h-64 md:min-h-full" : "aspect-[16/10]"}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={coverUrl(post)} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      <img src={coverUrl(post)} alt={post.title} width={800} height={500} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
     </div>
   );
 }

@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Arrow, Facebook, Instagram, Mail, Pinterest, Search, Twitter, Youtube } from "./icons";
 import { MailForm } from "./MailForm";
+import { MobileNav } from "./MobileNav";
 
 /** Own mark: a retro TV with rabbit ears, plus wordmark. */
 export function Logo({ dark = false }: { dark?: boolean }) {
   const ink = dark ? "#ffffff" : "#2b4886";
   return (
-    <Link href="/" className="inline-flex items-center gap-3" aria-label="90s TV Memories home">
-      <svg width="46" height="42" viewBox="0 0 46 42" fill="none" aria-hidden>
+    <Link href="/" className="inline-flex shrink-0 items-center gap-2 sm:gap-3" aria-label="90s TV Memories home">
+      <svg width="46" height="42" viewBox="0 0 46 42" fill="none" aria-hidden className="h-9 w-auto shrink-0 sm:h-[42px]">
         <path d="M14 11 8 2M25 11l8-9" stroke={ink} strokeWidth="2.5" strokeLinecap="round" />
         <rect x="2" y="10" width="42" height="28" rx="7" fill={ink} />
         <rect x="7" y="15" width="25" height="18" rx="4" fill="#c5d3dc" />
@@ -15,7 +16,7 @@ export function Logo({ dark = false }: { dark?: boolean }) {
         <circle cx="38" cy="28" r="2.3" fill="#c5d3dc" />
         <path d="M13 24h13M13 28h8" stroke={ink} strokeWidth="2" strokeLinecap="round" />
       </svg>
-      <span className={`font-head text-2xl font-bold leading-none tracking-tight ${dark ? "text-white" : "text-navy"}`}>
+      <span className={`font-head text-xl font-bold leading-none sm:text-2xl tracking-tight ${dark ? "text-white" : "text-navy"}`}>
         90s TV <span className={dark ? "text-[#c5d3dc]" : "text-black"}>Memories</span>
       </span>
     </Link>
@@ -43,22 +44,25 @@ export const NAV = [
 
 export function Header() {
   return (
-    <header className="bg-white">
+    <header className="relative bg-white">
       <div className="bg-navy text-xs text-white">
-        <div className="mx-auto flex max-w-[1366px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3 lg:px-16">
-          <p className="flex items-center gap-2"><Mail className="h-3.5 w-3.5" /> Saturday morning cartoons, TGIF sitcoms and VHS rentals</p>
-          <Link href="/blog" className="hidden items-center gap-2 font-bold uppercase tracking-wide sm:flex">Readable <Arrow className="h-3.5 w-3.5" /></Link>
-          <Socials className="text-white [&_svg]:h-4 [&_svg]:w-4" />
+        <div className="mx-auto flex max-w-[1366px] items-center justify-between gap-x-6 gap-y-2 px-4 py-2.5 sm:px-6 sm:py-3 lg:px-16">
+          <p className="flex min-w-0 items-center gap-2"><Mail className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">Saturday morning cartoons, TGIF sitcoms and VHS rentals</span></p>
+          <Link href="/blog" className="hidden shrink-0 items-center gap-2 font-bold uppercase tracking-wide md:flex">Readable <Arrow className="h-3.5 w-3.5" /></Link>
+          <div className="hidden sm:block"><Socials className="text-white [&_svg]:h-4 [&_svg]:w-4" /></div>
         </div>
       </div>
-      <div className="mx-auto flex max-w-[1366px] flex-wrap items-center gap-x-10 gap-y-3 px-6 py-5 lg:px-16">
+      <div className="mx-auto flex max-w-[1366px] items-center gap-x-6 px-4 py-3 sm:px-6 sm:py-5 lg:gap-x-10 lg:px-16">
         <Logo />
-        <nav className="flex flex-1 flex-wrap items-center gap-x-8 gap-y-2 text-[17px] text-black">
+        <nav aria-label="Main" className="ml-4 hidden flex-1 flex-wrap items-center gap-x-6 gap-y-2 text-[17px] text-black md:flex lg:gap-x-8">
           {NAV.map(([label, href]) => (
             <Link key={label} href={href} className="transition hover:text-navy">{label}</Link>
           ))}
         </nav>
-        <Link href="/blog" aria-label="Search stories" className="text-black hover:text-navy"><Search /></Link>
+        <div className="ml-auto flex items-center gap-1 md:ml-0">
+          <Link href="/blog" aria-label="Search stories" className="grid h-11 w-11 place-items-center text-black hover:text-navy"><Search /></Link>
+          <MobileNav items={NAV} />
+        </div>
       </div>
     </header>
   );

@@ -8,6 +8,7 @@ import { ViewBeacon } from "../../../components/Tracked";
 import { Prose } from "../../../lib/render";
 import { fmtDate } from "../../../lib/dates";
 import { getPostBySlug, getPublished, readMins } from "../../../lib/posts";
+import { JsonLd, SITE_NAME, abs, breadcrumbLd } from "../../../lib/seo";
 
 export const revalidate = 60;
 
@@ -16,10 +17,25 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug((await params).slug);
   if (!post) return {};
+  const image = coverUrl(post);
+  const url = `/posts/${post.slug}`;
   return {
     title: post.title,
     description: post.excerpt,
-    openGraph: { title: post.title, description: post.excerpt, type: "article", images: post.imageUrl ? [post.imageUrl] : undefined },
+    alternates: { canonical: url },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: "article",
+      url,
+      locale: "en_US",
+      publishedTime: post.createdAt,
+      modifiedTime: post.updatedAt || post.createdAt,
+      section: post.category,
+      authors: [SITE_NAME],
+      images: [{ url: image, alt: post.title }],
+    },
+    twitter: { card: "summary_large_image", title: post.title, description: post.excerpt, images: [image] },
   };
 }
 
@@ -34,26 +50,46 @@ export default async function PostPage({ params }: Props) {
       <Header />
       <ViewBeacon slug={post.slug} />
       <main>
+        <JsonLd
+          data={[
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: post.title.slice(0, 110),
+              description: post.excerpt,
+              image: [abs(coverUrl(post))],
+              datePublished: post.createdAt,
+              dateModified: post.updatedAt || post.createdAt,
+              articleSection: post.category,
+              wordCount: post.content.split(/\s+/).length,
+              inLanguage: "en-US",
+              mainEntityOfPage: abs(`/posts/${post.slug}`),
+              author: { "@type": "Organization", name: SITE_NAME, url: abs("/") },
+              publisher: { "@type": "Organization", name: SITE_NAME, logo: { "@type": "ImageObject", url: abs("/icon.svg") } },
+            },
+            breadcrumbLd([["Home", "/"], ["Stories", "/blog"], [post.title, `/posts/${post.slug}`]]),
+          ]}
+        />
         {/* grey banner with centred title */}
-        <section className="relative grid min-h-64 place-items-center bg-[#8c8c8c] px-6 py-16 text-center">
+        <section className="relative grid min-h-64 place-items-center bg-[#8c8c8c] px-4 py-12 text-center sm:px-6 sm:py-16">
           <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: `url(${coverUrl(post)})` }} />
           <div className="relative max-w-4xl">
-            <h1 className="text-3xl font-bold leading-tight text-white sm:text-5xl">{post.title}</h1>
+            <h1 className="break-words text-2xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">{post.title}</h1>
             <p className="mt-4 text-white/90">
-              {fmtDate(post.createdAt)} · {readMins(post.content)} min read · {post.category}
+              <time dateTime={post.createdAt}>{fmtDate(post.createdAt)}</time> · {readMins(post.content)} min read · {post.category}
             </p>
           </div>
         </section>
 
         <section className="bg-mist pb-20">
-          <div className="mx-auto grid max-w-[1200px] gap-10 px-6 lg:grid-cols-[1fr_320px]">
-            <article className="-mt-0 bg-white p-8 shadow-[4px_6px_12px_rgba(0,0,0,0.15)] sm:p-12 lg:-mt-0">
+          <div className="mx-auto grid max-w-[1200px] gap-8 px-0 sm:px-6 lg:grid-cols-[1fr_320px]">
+            <article className="-mt-0 min-w-0 bg-white p-5 shadow-[4px_6px_12px_rgba(0,0,0,0.15)] sm:p-12 lg:-mt-0">
               <Link href="/blog" className="text-sm text-navy hover:underline">← All stories</Link> <span className="text-slate">·</span> <Link href={`/posts/${post.slug}/classic`} className="text-sm text-navy hover:underline">Wide layout</Link>
               <p className="mb-8 mt-4 font-serif text-xl leading-relaxed text-slate">{post.excerpt}</p>
               <Prose content={post.content} />
             </article>
 
-            <aside className="space-y-8 lg:pt-16">
+            <aside className="space-y-8 px-4 sm:px-0 lg:pt-16">
               {more.length > 0 && (
                 <div className="bg-white p-6 shadow-[4px_6px_12px_rgba(0,0,0,0.15)]">
                   <h2 className="text-2xl text-navy">Keep reading</h2>

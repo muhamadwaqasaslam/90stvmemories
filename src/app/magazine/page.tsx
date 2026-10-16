@@ -8,7 +8,11 @@ import { TrackedLink } from "../../components/Tracked";
 import { MailForm } from "../../components/MailForm";
 import { getPublished } from "../../lib/posts";
 
-export const metadata: Metadata = { title: "Magazine", description: "A magazine-style front page for 90s TV Memories." };
+export const metadata: Metadata = {
+  title: "Magazine: 90s TV Nostalgia Stories",
+  description: "A magazine-style front page for 90s TV nostalgia: cartoons, sitcoms, movies on VHS and the gadgets we grew up with.",
+  alternates: { canonical: "/magazine" },
+};
 export const revalidate = 60;
 
 export default async function Magazine({ searchParams }: { searchParams: Promise<{ cat?: string; page?: string }> }) {
@@ -23,7 +27,7 @@ export default async function Magazine({ searchParams }: { searchParams: Promise
   return (
     <>
       <header className="bg-white">
-        <div className="mx-auto flex max-w-[1366px] flex-wrap items-center justify-between gap-4 px-6 py-5 lg:px-16">
+        <div className="mx-auto flex max-w-[1366px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:px-16">
           <Logo />
           <form action="/blog" className="flex w-full max-w-sm items-center border border-black/30 px-3 py-2 sm:w-auto">
             <Search className="h-4 w-4 text-slate" />
@@ -31,12 +35,12 @@ export default async function Magazine({ searchParams }: { searchParams: Promise
           </form>
         </div>
         <div className="border-y-2 border-navy">
-          <nav className="mx-auto flex max-w-[1366px] flex-wrap justify-center gap-x-1 px-6 text-sm uppercase lg:px-16">
-            <Link href="/magazine" className={`px-6 py-3 ${!cat ? "bg-navy text-white" : "hover:text-navy"}`}>All</Link>
+          <nav className="mx-auto flex max-w-[1366px] flex-wrap justify-center gap-x-1 px-4 text-xs uppercase sm:px-6 sm:text-sm lg:px-16">
+            <Link href="/magazine" className={`px-3 py-3 sm:px-6 ${!cat ? "bg-navy text-white" : "hover:text-navy"}`}>All</Link>
             {categories.map((c) => (
-              <Link key={c} href={`/magazine?cat=${encodeURIComponent(c)}`} className={`px-6 py-3 ${cat === c ? "bg-navy text-white" : "hover:text-navy"}`}>{c}</Link>
+              <Link key={c} href={`/magazine?cat=${encodeURIComponent(c)}`} className={`px-3 py-3 sm:px-6 ${cat === c ? "bg-navy text-white" : "hover:text-navy"}`}>{c}</Link>
             ))}
-            {NAV.slice(4).map(([l, h]) => <Link key={l} href={h} className="px-6 py-3 hover:text-navy">{l}</Link>)}
+            {NAV.slice(4).map(([l, h]) => <Link key={l} href={h} className="px-3 py-3 sm:px-6 hover:text-navy">{l}</Link>)}
           </nav>
         </div>
       </header>

@@ -4,8 +4,14 @@ import { Footer, Header } from "../components/SiteChrome";
 import { Cover, PostCard, PostRow } from "../components/PostCard";
 import { TrackedLink } from "../components/Tracked";
 import { getPublished } from "../lib/posts";
+import { abs, JsonLd } from "../lib/seo";
 
 export const revalidate = 60;
+
+export const metadata = {
+  title: { absolute: "90s TV Memories | 90s Cartoons, TGIF Sitcoms & VHS Nostalgia" },
+  alternates: { canonical: "/" },
+};
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ cat?: string }> }) {
   const { cat } = await searchParams;
@@ -20,16 +26,24 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
     <>
       <Header />
       <main>
+        <h1 className="sr-only">90s TV Memories: Saturday morning cartoons, TGIF sitcoms and VHS nostalgia for 90s kids</h1>
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            itemListElement: all.slice(0, 10).map((p, i) => ({ "@type": "ListItem", position: i + 1, url: abs(`/posts/${p.slug}`), name: p.title })),
+          }}
+        />
         {/* hero: navy-to-grey banner with the featured story */}
         <section className="relative overflow-hidden bg-gradient-to-r from-navy via-[#6b7aa0] to-[#8c8c8c]">
           {featured && <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url(${coverUrl(featured)})` }} />}
-          <div className="relative mx-auto max-w-[1366px] px-6 py-20 lg:px-16 lg:py-28">
+          <div className="relative mx-auto max-w-[1366px] px-4 py-14 sm:py-20 lg:px-16 lg:py-28">
             {featured ? (
               <div className="max-w-xl">
                 <Link href={`/?cat=${encodeURIComponent(featured.category)}#stories`} className="inline-block bg-white px-5 py-2 text-xs font-medium uppercase text-navy">
                   {featured.category}
                 </Link>
-                <h1 className="mt-6 text-3xl leading-snug text-white sm:text-[39px] sm:leading-[54px]">{featured.title}</h1>
+                <h2 className="mt-6 text-3xl leading-snug text-white sm:text-[39px] sm:leading-[54px]">{featured.title}</h2>
                 <p className="mt-4 line-clamp-3 font-serif text-lg text-white/90">{featured.excerpt}</p>
                 <TrackedLink slug={featured.slug} className="mt-8 inline-block bg-white px-5 py-2 text-[11px] font-bold uppercase text-navy">
                   Read story
@@ -37,14 +51,14 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 <div className="mt-14 flex gap-3" aria-hidden>{[0, 1, 2, 3, 4, 5].map((i) => <span key={i} className={`h-3 w-3 rounded-full border-2 border-white ${i === 0 ? "bg-white" : ""}`} />)}</div>
               </div>
             ) : (
-              <h1 className="text-3xl text-white sm:text-[39px]">Press play on your childhood.</h1>
+              <p className="text-3xl text-white sm:text-[39px]">Press play on your childhood.</p>
             )}
           </div>
         </section>
 
         {/* three columns: image story + list */}
         {columns.length > 0 && (
-          <section className="mx-auto max-w-[1366px] px-6 py-16 lg:px-16">
+          <section className="mx-auto max-w-[1366px] px-4 py-12 sm:px-6 sm:py-16 lg:px-16">
             <div className="grid gap-10 md:grid-cols-3">
               {columns.map((p, i) => {
                 const more = grid.slice(i * 2, i * 2 + 2);
@@ -66,8 +80,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
 
         {/* 8-up card grid on grey */}
         <section id="stories" className="scroll-mt-4 bg-[#ececee] py-16">
-          <div className="mx-auto max-w-[1366px] px-6 lg:px-16">
-            <h2 className="text-center text-[40px] uppercase leading-tight">Latest stories</h2>
+          <div className="mx-auto max-w-[1366px] px-4 sm:px-6 lg:px-16">
+            <h2 className="text-center text-3xl uppercase leading-tight sm:text-[40px]">Latest stories</h2>
             <div id="topics" className="mt-6 flex flex-wrap justify-center gap-3 scroll-mt-4">
               <Chip href="/#stories" active={!cat}>All</Chip>
               {categories.map((c) => (
@@ -89,8 +103,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           <div className="min-h-64 bg-[#c4c4c4]">
             {featured && <Cover post={featured} big />}
           </div>
-          <div className="bg-[#ececee] px-8 py-16 text-center md:px-20">
-            <h2 className="text-[40px] uppercase leading-tight">Why 90s TV Memories?</h2>
+          <div className="bg-[#ececee] px-6 py-12 text-center sm:px-8 sm:py-16 md:px-20">
+            <h2 className="text-3xl uppercase leading-tight sm:text-[40px]">Why 90s TV Memories?</h2>
             <p className="mx-auto mt-6 max-w-md font-serif text-xl leading-8">
               A small, friendly corner of the internet for everyone who remembers rabbit ears, cereal bowls and rewinding the tape.
             </p>

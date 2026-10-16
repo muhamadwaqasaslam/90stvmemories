@@ -4,7 +4,11 @@ import { Banner, Pagination, PostGridCard, paginate } from "../../components/Blo
 import { Search } from "../../components/icons";
 import { getPublished } from "../../lib/posts";
 
-export const metadata: Metadata = { title: "Stories", description: "Every story from 90s TV Memories, filterable by topic." };
+export const metadata: Metadata = {
+  title: "90s TV Stories: Cartoons, Sitcoms & VHS Memories",
+  description: "Browse every 90s TV Memories story: Saturday morning cartoons, TGIF sitcoms, VHS rentals and retro tech. Search by show or topic.",
+  alternates: { canonical: "/blog" },
+};
 export const revalidate = 60;
 
 export default async function Blog({ searchParams }: { searchParams: Promise<{ cat?: string; q?: string; page?: string }> }) {

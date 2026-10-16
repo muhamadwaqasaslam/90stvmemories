@@ -8,7 +8,11 @@ import { Cover } from "../../components/PostCard";
 import { TrackedLink } from "../../components/Tracked";
 import { getPublished } from "../../lib/posts";
 
-export const metadata: Metadata = { title: "Features", description: "Featured stories, top picks and the full archive." };
+export const metadata: Metadata = {
+  title: "Featured 90s TV Stories & Top Picks",
+  description: "Top picks and featured stories about 90s cartoons, sitcoms and VHS-era TV from the 90s TV Memories archive.",
+  alternates: { canonical: "/features" },
+};
 export const revalidate = 60;
 
 export default async function Features({ searchParams }: { searchParams: Promise<{ cat?: string; page?: string }> }) {

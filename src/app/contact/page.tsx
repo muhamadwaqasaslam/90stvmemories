@@ -4,7 +4,11 @@ import { Banner } from "../../components/Blocks";
 import { Check } from "../../components/icons";
 import { MailForm } from "../../components/MailForm";
 
-export const metadata: Metadata = { title: "Contact", description: "Share a TV memory or send us a note." };
+export const metadata: Metadata = {
+  title: "Contact 90s TV Memories",
+  description: "Share your favorite 90s TV memory, suggest a story or send the 90s TV Memories team a note.",
+  alternates: { canonical: "/contact" },
+};
 
 const points = [
   ["Tell us your favourite show", "The one you rushed home for, the theme tune you can still sing."],

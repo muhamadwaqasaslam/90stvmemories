@@ -3,10 +3,12 @@ import Link from "next/link";
 import { Footer, Header } from "../../components/SiteChrome";
 import { Banner } from "../../components/Blocks";
 import { getPublished } from "../../lib/posts";
+import { JsonLd, breadcrumbLd, abs } from "../../lib/seo";
 
 export const metadata: Metadata = {
-  title: "About",
-  description: "90s TV Memories is a friendly home for cartoons, sitcoms, VHS rentals and the TV rituals that raised a generation.",
+  title: "About 90s TV Memories",
+  description: "90s TV Memories is an independent US fan site for cartoons, sitcoms, VHS rentals and the TV rituals that raised a generation of 90s kids.",
+  alternates: { canonical: "/about" },
 };
 
 export const revalidate = 300;
@@ -41,6 +43,17 @@ export default async function About() {
     <>
       <Header />
       <main>
+        <JsonLd
+          data={[
+            {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+            },
+            { "@context": "https://schema.org", "@type": "AboutPage", name: "About 90s TV Memories", url: abs("/about"), inLanguage: "en-US" },
+            breadcrumbLd([["Home", "/"], ["About", "/about"]]),
+          ]}
+        />
         <Banner title="About Us" />
 
         <section className="mx-auto max-w-4xl px-6 pb-4 pt-16 text-center">

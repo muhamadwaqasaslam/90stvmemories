@@ -184,3 +184,12 @@ h1, h2, h3, h4 {
 }
 .admin-ui .pop-hover:hover { transform: translateY(-2px); box-shadow: 6px 8px 16px rgba(0, 0, 0, 0.2); }
 .admin-ui ::selection { background: var(--color-navy); }
+
+/* Responsive safety net */
+img, video, svg { max-width: 100%; }
+.prose-90s { overflow-wrap: anywhere; }
+.prose-90s table { display: block; max-width: 100%; overflow-x: auto; }
+.admin-ui input, .admin-ui select, .admin-ui textarea { font-size: 16px; } /* stops iOS zoom on focus */
+@media (max-width: 640px) {
+  .admin-ui button, .admin-ui a[class*="px-"] { min-height: 2.5rem; }
+}

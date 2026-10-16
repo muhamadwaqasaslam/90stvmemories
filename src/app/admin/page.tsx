@@ -48,12 +48,12 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
           <h1 className="font-display text-3xl font-bold sm:text-4xl">Analytics</h1>
           <p className="mt-1 text-sm text-ink/55">Times shown in US Eastern. Last {days} days.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2" role="group" aria-label="Date range">
           {RANGES.map((r) => (
             <Link
               key={r}
               href={`/admin?days=${r}`}
-              className={`rounded-full border-2 px-4 py-2 text-sm font-semibold ${r === days ? "border-ink bg-ink text-white" : "border-ink/15 hover:bg-ink/5"}`}
+              className={`flex min-h-11 items-center rounded-full border-2 px-4 py-2 text-sm font-semibold ${r === days ? "border-ink bg-ink text-white" : "border-ink/15 hover:bg-ink/5"}`}
             >
               {r}d
             </Link>
@@ -73,7 +73,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
           <div key={s.label} className="rounded-2xl pop bg-white p-5">
             <span className={`inline-block h-2 w-10 rounded-full ${s.color}`} />
             <p className="mt-3 text-sm font-bold text-ink/65">{s.label}</p>
-            <p className="font-display text-3xl font-bold sm:text-4xl">{s.value}</p>
+            <p className="break-words font-display text-2xl font-bold sm:text-4xl">{s.value}</p>
             <p className="mt-1 text-sm text-ink/45">{s.note}</p>
           </div>
         ))}
@@ -91,7 +91,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         )}
       </section>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1.4fr_1fr] [&>*]:min-w-0">
         {/* Per month */}
         <section className="rounded-2xl pop bg-white p-5 sm:p-6">
           <h2 className="font-display text-xl font-semibold">Per month</h2>

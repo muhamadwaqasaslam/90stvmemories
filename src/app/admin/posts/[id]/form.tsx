@@ -9,7 +9,7 @@ import { MEDIA_RE, Prose, VIDEO_RE, parseMediaAttrs, type Align } from "../../..
 
 const input =
   "mt-1 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base text-ink outline-none placeholder:text-ink/35 focus:border-pink";
-const btn = "rounded-lg px-2.5 py-1.5 text-sm font-semibold text-ink/70 transition hover:bg-ink/5 hover:text-ink";
+const btn = "min-h-10 min-w-10 rounded-lg px-2.5 py-1.5 text-sm font-semibold text-ink/70 transition hover:bg-ink/5 hover:text-ink";
 
 interface MediaItem {
   url: string;
@@ -214,7 +214,7 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
   }
 
   return (
-    <form action={action} className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
+    <form action={action} className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <input type="hidden" name="id" value={post?.id ?? ""} />
 
       <div className="min-w-0 space-y-5">
@@ -395,7 +395,7 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
             ref={ta}
             name="content"
             required
-            rows={22}
+            rows={16}
             value={content}
             onChange={(e) => {
               setContent(e.target.value);
@@ -405,10 +405,10 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
             onKeyUp={readSel}
             onClick={readSel}
             placeholder={"Write your story here.\n\nLeave a blank line between paragraphs.\nDrop images or videos anywhere in this box to upload them."}
-            className={`${tab === "write" ? "block" : "hidden"} w-full resize-y rounded-b-2xl bg-white px-5 py-4 text-lg leading-relaxed text-ink outline-none placeholder:text-ink/35`}
+            className={`${tab === "write" ? "block" : "hidden"} w-full min-h-[50vh] resize-y rounded-b-2xl bg-white px-4 py-4 text-base sm:px-5 sm:text-lg leading-relaxed text-ink outline-none placeholder:text-ink/35`}
           />
           {tab === "preview" && (
-            <div className="min-h-64 px-5 py-6">
+            <div className="min-h-64 px-4 py-6 sm:px-5">
               {content.trim() ? <Prose content={content} /> : <p className="text-ink/50">Nothing to preview yet.</p>}
             </div>
           )}
@@ -422,7 +422,8 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
       <aside className="space-y-5 rounded-2xl pop bg-white p-5 lg:self-start">
         <label className="block text-sm font-semibold">
           Short summary (shows on cards &amp; Google)
-          <textarea name="excerpt" rows={3} defaultValue={post?.excerpt} className={input} />
+          <textarea name="excerpt" rows={3} maxLength={300} defaultValue={post?.excerpt} className={input} />
+          <span className="mt-1 block text-xs font-normal text-ink/50">SEO tip: aim for 120–160 characters and include the show name.</span>
         </label>
         <label className="block text-sm font-semibold">
           Category
@@ -433,10 +434,10 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
           Cover image
           {cover && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={cover} alt="" className="mt-2 aspect-[16/10] w-full rounded-xl object-cover ring-1 ring-ink/10" />
+            <img src={cover} alt="Cover preview" className="mt-2 aspect-[16/10] w-full rounded-xl object-cover ring-1 ring-ink/10" />
           )}
           <input type="hidden" name="imageUrl" value={cover} />
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 flex flex-wrap gap-2">
             <button type="button" disabled={coverBusy} onClick={() => coverRef.current?.click()} className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white transition hover:bg-pink disabled:opacity-60">
               {coverBusy ? "Uploading…" : cover ? "Change" : "Upload cover"}
             </button>
