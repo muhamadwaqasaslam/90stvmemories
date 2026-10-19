@@ -6,7 +6,7 @@ import { Chevron, Search } from "../../components/icons";
 import { Cover } from "../../components/PostCard";
 import { TrackedLink } from "../../components/Tracked";
 import { MailForm } from "../../components/MailForm";
-import { getPublished } from "../../lib/posts";
+import { getStoryPosts } from "../../lib/posts";
 
 export const metadata: Metadata = {
   title: "Magazine: 90s TV Nostalgia Stories",
@@ -17,9 +17,9 @@ export const revalidate = 60;
 
 export default async function Magazine({ searchParams }: { searchParams: Promise<{ cat?: string; page?: string }> }) {
   const { cat = "", page = "1" } = await searchParams;
-  const all = await getPublished();
-  const categories = [...new Set(all.map((p) => p.category))];
-  const list = cat ? all.filter((p) => p.category === cat) : all;
+  const stories = await getStoryPosts();
+  const categories = [...new Set(stories.map((p) => p.category))];
+  const list = cat ? stories.filter((p) => p.category === cat) : stories;
   const [lead, ...rest] = list;
   const { slice, pages, page: cur } = paginate(rest, Number(page), 6);
   const href = (n: number) => `/magazine?${new URLSearchParams({ ...(cat && { cat }), page: String(n) })}`;

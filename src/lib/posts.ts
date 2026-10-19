@@ -15,18 +15,42 @@ export interface Post {
   updatedAt: string;
 }
 
+export const LEGAL_SLUGS = new Set(["privacy-policy", "terms-of-service", "disclaimer"]);
+
+export function isLegalSlug(slug: string): boolean {
+  return LEGAL_SLUGS.has(slug);
+}
+
+export function cleanCategory(cat?: string): string {
+  if (!cat) return "Memories";
+  return cat
+    .replace(/\s*یا\s*/g, " & ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 const KEY = "posts";
 
 export async function getAllPosts(): Promise<Post[]> {
   const [raw] = await run([["HGETALL", KEY]]);
   const map = toObj(raw);
   return Object.values(map)
-    .map((v) => JSON.parse(v) as Post)
+    .map((v) => {
+      const p = JSON.parse(v) as Post;
+      if (p.category) {
+        p.category = cleanCategory(p.category);
+      }
+      return p;
+    })
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 export async function getPublished(): Promise<Post[]> {
   return (await getAllPosts()).filter((p) => p.status === "published");
+}
+
+export async function getStoryPosts(): Promise<Post[]> {
+  return (await getPublished()).filter((p) => !isLegalSlug(p.slug));
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {

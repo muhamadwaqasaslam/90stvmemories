@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { FooterColumns, Header } from "../../components/SiteChrome";
 import { Banner, Pagination, PostGridCard, paginate } from "../../components/Blocks";
 import { Search } from "../../components/icons";
-import { getPublished } from "../../lib/posts";
+import { getStoryPosts } from "../../lib/posts";
 
 export const metadata: Metadata = {
   title: "90s TV Stories: Cartoons, Sitcoms & VHS Memories",
@@ -13,10 +13,10 @@ export const revalidate = 60;
 
 export default async function Blog({ searchParams }: { searchParams: Promise<{ cat?: string; q?: string; page?: string }> }) {
   const { cat = "", q = "", page = "1" } = await searchParams;
-  const all = await getPublished();
-  const categories = [...new Set(all.map((p) => p.category))];
+  const stories = await getStoryPosts();
+  const categories = [...new Set(stories.map((p) => p.category))];
   const needle = q.trim().toLowerCase();
-  const filtered = all.filter((p) => (!cat || p.category === cat) && (!needle || `${p.title} ${p.excerpt}`.toLowerCase().includes(needle)));
+  const filtered = stories.filter((p) => (!cat || p.category === cat) && (!needle || `${p.title} ${p.excerpt}`.toLowerCase().includes(needle)));
   const { slice, pages, page: cur } = paginate(filtered, Number(page), 9);
   const href = (n: number) => `/blog?${new URLSearchParams({ ...(cat && { cat }), ...(q && { q }), page: String(n) })}`;
 

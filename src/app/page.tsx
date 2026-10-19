@@ -3,7 +3,7 @@ import { coverUrl } from "../lib/stock";
 import { Footer, Header } from "../components/SiteChrome";
 import { Cover, PostCard, PostRow } from "../components/PostCard";
 import { TrackedLink } from "../components/Tracked";
-import { getPublished } from "../lib/posts";
+import { getStoryPosts } from "../lib/posts";
 import { abs, JsonLd } from "../lib/seo";
 
 export const revalidate = 60;
@@ -15,9 +15,9 @@ export const metadata = {
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ cat?: string }> }) {
   const { cat } = await searchParams;
-  const all = await getPublished();
-  const categories = [...new Set(all.map((p) => p.category))];
-  const posts = cat ? all.filter((p) => p.category === cat) : all;
+  const stories = await getStoryPosts();
+  const categories = [...new Set(stories.map((p) => p.category))];
+  const posts = cat ? stories.filter((p) => p.category === cat) : stories;
   const [featured, ...rest] = posts;
   const columns = rest.slice(0, 3);
   const grid = rest.slice(3, 11);
@@ -31,7 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
           data={{
             "@context": "https://schema.org",
             "@type": "ItemList",
-            itemListElement: all.slice(0, 10).map((p, i) => ({ "@type": "ListItem", position: i + 1, url: abs(`/posts/${p.slug}`), name: p.title })),
+            itemListElement: stories.slice(0, 10).map((p, i) => ({ "@type": "ListItem", position: i + 1, url: abs(`/posts/${p.slug}`), name: p.title })),
           }}
         />
         {/* hero: navy-to-grey banner with the featured story */}

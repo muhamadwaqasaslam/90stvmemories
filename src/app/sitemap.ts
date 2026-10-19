@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "../lib/site";
-import { getPublished } from "../lib/posts";
+import { getPublished, isLegalSlug } from "../lib/posts";
 
 export const revalidate = 3600;
 
@@ -17,11 +17,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
   return [
     ...pages,
-    ...posts.map((p) => ({
-      url: `${SITE_URL}/posts/${p.slug}`,
-      lastModified: new Date(p.updatedAt || p.createdAt),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
+    ...posts.map((p) => {
+      const isLegal = isLegalSlug(p.slug);
+      return {
+        url: `${SITE_URL}/posts/${p.slug}`,
+        lastModified: new Date(p.updatedAt || p.createdAt),
+        changeFrequency: isLegal ? ("yearly" as const) : ("monthly" as const),
+        priority: isLegal ? 0.3 : 0.8,
+      };
+    }),
   ];
 }

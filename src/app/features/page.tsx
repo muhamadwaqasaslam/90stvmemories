@@ -6,7 +6,7 @@ import { Btn, Pagination, SubscribeSplit, Title, paginate } from "../../componen
 import { Arrow, Search } from "../../components/icons";
 import { Cover } from "../../components/PostCard";
 import { TrackedLink } from "../../components/Tracked";
-import { getPublished } from "../../lib/posts";
+import { getStoryPosts } from "../../lib/posts";
 
 export const metadata: Metadata = {
   title: "Featured 90s TV Stories & Top Picks",
@@ -17,11 +17,11 @@ export const revalidate = 60;
 
 export default async function Features({ searchParams }: { searchParams: Promise<{ cat?: string; page?: string }> }) {
   const { cat = "", page = "1" } = await searchParams;
-  const all = await getPublished();
-  const categories = [...new Set(all.map((p) => p.category))];
-  const [hero, ...more] = all;
+  const stories = await getStoryPosts();
+  const categories = [...new Set(stories.map((p) => p.category))];
+  const [hero, ...more] = stories;
   const strip = more.slice(0, 3);
-  const archive = cat ? all.filter((p) => p.category === cat) : all;
+  const archive = cat ? stories.filter((p) => p.category === cat) : stories;
   const top = archive.slice(0, 4);
   const showcase = top[0];
   const { slice, pages, page: cur } = paginate(archive, Number(page), 8);

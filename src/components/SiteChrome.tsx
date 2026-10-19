@@ -81,6 +81,13 @@ export function Footer() {
         A love letter to the shows, tapes and Saturday mornings that raised a generation
       </p>
       <div className="mx-auto max-w-[1366px] px-6 lg:px-16">
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 py-4 text-sm text-slate">
+          <Link href="/about" className="hover:text-navy">About</Link>
+          <Link href="/contact" className="hover:text-navy">Contact</Link>
+          <Link href="/posts/privacy-policy" className="hover:text-navy">Privacy Policy</Link>
+          <Link href="/posts/terms-of-service" className="hover:text-navy">Terms of Service</Link>
+          <Link href="/posts/disclaimer" className="hover:text-navy">Disclaimer</Link>
+        </div>
         <div className="border-t border-black" />
         <p className="py-4 text-center font-serif text-[15px]">© {new Date().getFullYear()} 90s TV Memories. All trademarks belong to their owners.</p>
       </div>
@@ -110,6 +117,13 @@ export function FooterColumns() {
           <h3 className="text-xl text-navy">Get new stories</h3>
           <MailForm subject="Newsletter signup" kind="subscribe" fields={[{ name: "email", placeholder: "Your email", type: "email" }]} button="Join" className="mt-3 flex justify-center" inline />
         </div>
+      </div>
+      <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 pb-4 text-sm text-slate">
+        <Link href="/about" className="hover:text-navy">About</Link>
+        <Link href="/contact" className="hover:text-navy">Contact</Link>
+        <Link href="/posts/privacy-policy" className="hover:text-navy">Privacy Policy</Link>
+        <Link href="/posts/terms-of-service" className="hover:text-navy">Terms of Service</Link>
+        <Link href="/posts/disclaimer" className="hover:text-navy">Disclaimer</Link>
       </div>
       <p className="px-6 pb-8 text-center font-serif text-[15px]">© {new Date().getFullYear()} 90s TV Memories. All trademarks belong to their owners.</p>
     </footer>

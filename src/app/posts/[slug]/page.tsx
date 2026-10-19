@@ -7,7 +7,7 @@ import { Cover, PostRow } from "../../../components/PostCard";
 import { ViewBeacon } from "../../../components/Tracked";
 import { Prose } from "../../../lib/render";
 import { fmtDate } from "../../../lib/dates";
-import { getPostBySlug, getPublished, readMins } from "../../../lib/posts";
+import { getPostBySlug, getStoryPosts, readMins } from "../../../lib/posts";
 import { JsonLd, SITE_NAME, abs, breadcrumbLd } from "../../../lib/seo";
 
 export const revalidate = 60;
@@ -43,7 +43,7 @@ export default async function PostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
-  const more = (await getPublished()).filter((p) => p.id !== post.id).slice(0, 3);
+  const more = (await getStoryPosts()).filter((p) => p.id !== post.id).slice(0, 3);
 
   return (
     <>
