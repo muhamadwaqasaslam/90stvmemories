@@ -17,12 +17,13 @@ export interface Post {
 
 export const LEGAL_SLUGS = new Set(["privacy-policy", "terms-of-service", "disclaimer"]);
 
-export function isLegalSlug(slug: string): boolean {
+export function isLegalSlug(slug?: string): boolean {
+  if (!slug) return false;
   return LEGAL_SLUGS.has(slug);
 }
 
 export function cleanCategory(cat?: string): string {
-  if (!cat) return "Memories";
+  if (typeof cat !== "string" || !cat.trim()) return "Memories";
   return cat
     .replace(/\s*یا\s*/g, " & ")
     .replace(/\s+/g, " ")
@@ -36,13 +37,18 @@ export async function getAllPosts(): Promise<Post[]> {
   const map = toObj(raw);
   return Object.values(map)
     .map((v) => {
-      const p = JSON.parse(v) as Post;
-      if (p.category) {
-        p.category = cleanCategory(p.category);
+      try {
+        const p = JSON.parse(v) as Post;
+        if (p && p.category) {
+          p.category = cleanCategory(p.category);
+        }
+        return p;
+      } catch {
+        return null as unknown as Post;
       }
-      return p;
     })
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    .filter((p): p is Post => Boolean(p && p.slug))
+    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 }
 
 export async function getPublished(): Promise<Post[]> {
