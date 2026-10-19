@@ -17,7 +17,14 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug((await params).slug);
-  return post ? { title: post.title, description: post.excerpt, alternates: { canonical: `/posts/${post.slug}` } } : {};
+  return post
+    ? {
+        title: post.title,
+        description: post.excerpt,
+        keywords: post.tags?.length ? post.tags : undefined,
+        alternates: { canonical: `/posts/${post.slug}` },
+      }
+    : {};
 }
 
 function Share({ title, slug }: { title: string; slug: string }) {
@@ -55,6 +62,21 @@ export default async function ClassicPost({ params }: Props) {
           <p className="mt-3 font-serif text-sm text-slate">{fmtDate(post.createdAt)} · {readMins(post.content)} min read · {post.category}</p>
           <p className="mt-6 font-serif text-xl leading-relaxed">{post.excerpt}</p>
           <div className="mt-6"><Prose content={post.content} /></div>
+          {post.tags && post.tags.length > 0 && (
+            <div className="mt-8 border-t border-slate/15 pt-6">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate/70">Tags &amp; Keywords</p>
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex items-center rounded-full bg-slate/10 px-3 py-1 text-xs font-semibold text-navy hover:bg-navy hover:text-white transition-colors"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="mt-10 flex items-center justify-between pb-8">
             <Link href="/blog" className="inline-flex items-center gap-2 bg-navy px-5 py-2 font-serif text-sm text-white">All stories <Chevron className="h-3 w-3" /></Link>
             <Link href={`/posts/${post.slug}`} className="font-serif text-sm text-navy hover:underline">Sidebar layout</Link>

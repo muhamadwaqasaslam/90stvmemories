@@ -48,16 +48,26 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
           <h1 className="font-display text-3xl font-bold sm:text-4xl">Analytics</h1>
           <p className="mt-1 text-sm text-ink/55">Times shown in US Eastern. Last {days} days.</p>
         </div>
-        <div className="flex gap-2" role="group" aria-label="Date range">
-          {RANGES.map((r) => (
-            <Link
-              key={r}
-              href={`/admin?days=${r}`}
-              className={`flex min-h-11 items-center rounded-full border-2 px-4 py-2 text-sm font-semibold ${r === days ? "border-ink bg-ink text-white" : "border-ink/15 hover:bg-ink/5"}`}
-            >
-              {r}d
-            </Link>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="/api/admin/backup"
+            download
+            className="flex min-h-11 items-center gap-2 rounded-full border-2 border-ink/15 px-4 py-2 text-sm font-semibold hover:bg-ink/5 transition"
+            title="Download full JSON backup of all articles"
+          >
+            <span>💾</span> Export Backup
+          </a>
+          <div className="flex gap-2" role="group" aria-label="Date range">
+            {RANGES.map((r) => (
+              <Link
+                key={r}
+                href={`/admin?days=${r}`}
+                className={`flex min-h-11 items-center rounded-full border-2 px-4 py-2 text-sm font-semibold ${r === days ? "border-ink bg-ink text-white" : "border-ink/15 hover:bg-ink/5"}`}
+              >
+                {r}d
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -143,6 +153,63 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
             ))}
             {!d.countries.length && <li className="text-sm text-ink/45">No views yet.</li>}
           </ul>
+        </section>
+      </div>
+
+      {/* Traffic Come From & Backup Options */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
+        {/* Traffic Come From */}
+        <section className="rounded-2xl pop bg-white p-5 sm:p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="font-display text-xl font-semibold">Traffic Come From</h2>
+              <p className="mt-1 text-sm text-ink/55">Where visitors discover your website &amp; articles</p>
+            </div>
+            <span className="rounded-full bg-pink/10 px-2.5 py-1 text-xs font-bold text-pink">Live Referrers</span>
+          </div>
+          <ul className="mt-4 space-y-3">
+            {d.trafficSources.slice(0, 6).map((ts) => (
+              <li key={ts.source}>
+                <div className="flex justify-between text-sm font-bold">
+                  <span className="truncate pr-2">{ts.source}</span>
+                  <span className="tabular-nums text-ink/80">{nf.format(ts.count)} <span className="font-normal text-xs text-ink/45">({ts.pct}%)</span></span>
+                </div>
+                <div className="mt-1 h-2.5 rounded-full bg-ink/5">
+                  <div className="h-full rounded-full bg-sun" style={{ width: `${Math.max(5, ts.pct)}%` }} />
+                </div>
+              </li>
+            ))}
+            {!d.trafficSources.length && <li className="text-sm text-ink/45">No traffic source data recorded yet.</li>}
+          </ul>
+        </section>
+
+        {/* Website backup options */}
+        <section className="flex flex-col justify-between rounded-2xl pop bg-white p-5 sm:p-6">
+          <div>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-display text-xl font-semibold">Website Backup Options</h2>
+                <p className="mt-1 text-sm text-ink/55">Safeguard your database and article content</p>
+              </div>
+              <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-600">Database Safety</span>
+            </div>
+            <div className="mt-4 rounded-xl border border-ink/10 bg-paper/50 p-4">
+              <p className="text-sm font-semibold text-ink">Articles Backup Snapshot</p>
+              <p className="mt-1 text-xs text-ink/60">
+                Exports all {d.perPost.length} articles including full text, formatting, tags, images, categories, and timestamps in standard JSON format.
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href="/api/admin/backup"
+              download
+              className="pop pop-hover inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white hover:bg-pink transition"
+            >
+              <span>💾</span> Download JSON Backup
+            </a>
+            <span className="text-xs text-ink/45">Instant 1-click download</span>
+          </div>
         </section>
       </div>
 

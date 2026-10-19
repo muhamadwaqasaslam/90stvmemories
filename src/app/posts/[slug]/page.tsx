@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.excerpt,
+    keywords: post.tags?.length ? post.tags : undefined,
     alternates: { canonical: url },
     openGraph: {
       title: post.title,
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.createdAt,
       modifiedTime: post.updatedAt || post.createdAt,
       section: post.category,
+      tags: post.tags,
       authors: [SITE_NAME],
       images: [{ url: image, alt: post.title }],
     },
@@ -61,6 +63,7 @@ export default async function PostPage({ params }: Props) {
               datePublished: post.createdAt,
               dateModified: post.updatedAt || post.createdAt,
               articleSection: post.category,
+              keywords: post.tags?.length ? post.tags.join(", ") : undefined,
               wordCount: post.content.split(/\s+/).length,
               inLanguage: "en-US",
               mainEntityOfPage: abs(`/posts/${post.slug}`),
@@ -87,6 +90,22 @@ export default async function PostPage({ params }: Props) {
               <Link href="/blog" className="text-sm text-navy hover:underline">← All stories</Link> <span className="text-slate">·</span> <Link href={`/posts/${post.slug}/classic`} className="text-sm text-navy hover:underline">Wide layout</Link>
               <p className="mb-8 mt-4 font-serif text-xl leading-relaxed text-slate">{post.excerpt}</p>
               <Prose content={post.content} />
+
+              {post.tags && post.tags.length > 0 && (
+                <div className="mt-10 border-t border-slate/15 pt-6">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate/70">Tags &amp; Keywords</p>
+                  <div className="mt-2.5 flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center rounded-full bg-slate/10 px-3 py-1 text-xs font-semibold text-navy hover:bg-navy hover:text-white transition-colors"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </article>
 
             <aside className="space-y-8 px-4 sm:px-0 lg:pt-16">

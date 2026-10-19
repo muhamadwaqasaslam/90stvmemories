@@ -44,6 +44,14 @@ export async function save(_: string | null, form: FormData): Promise<string | n
   const clash = (await getAllPosts()).find((p) => p.slug === slug && p.id !== existing?.id);
   if (clash) return `The URL "${slug}" is already used by another article.`;
 
+  const rawTags = str("tags");
+  const tags = rawTags
+    ? rawTags
+        .split(",")
+        .map((t) => t.trim().replace(/^#/, ""))
+        .filter(Boolean)
+    : [];
+
   const now = new Date().toISOString();
   const theme = (str("theme") in THEMES ? str("theme") : "sunset") as ThemeKey;
   const post: Post = {
@@ -53,6 +61,7 @@ export async function save(_: string | null, form: FormData): Promise<string | n
     content,
     excerpt: str("excerpt") || content.replace(/[#>*-]/g, "").slice(0, 160).trim() + "…",
     category: str("category") || "Memories",
+    tags: tags.length > 0 ? tags : undefined,
     theme,
     imageUrl: /^(https?:\/\/|\/(?!\/))[^\s"'()]+$/.test(str("imageUrl")) ? str("imageUrl") : undefined,
     status: str("status") === "draft" ? "draft" : "published",

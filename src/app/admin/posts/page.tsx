@@ -18,9 +18,19 @@ export default async function PostsAdmin({ searchParams }: { searchParams: Promi
           <p className="text-xs font-semibold uppercase tracking-widest text-pink">BROADCAST DESK</p>
           <h1 className="font-display text-3xl font-bold sm:text-4xl">Articles</h1>
         </div>
-        <Link href="/admin/posts/new" className="pop pop-hover w-full rounded-full bg-pink px-6 py-3 text-center font-semibold text-white sm:w-auto">
-          + New article
-        </Link>
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+          <a
+            href="/api/admin/backup"
+            download
+            className="flex min-h-11 items-center gap-2 rounded-full border-2 border-ink/20 px-4 py-2 text-sm font-semibold hover:bg-ink/5"
+            title="Download full JSON backup of all articles"
+          >
+            <span>💾</span> Backup
+          </a>
+          <Link href="/admin/posts/new" className="pop pop-hover flex min-h-11 items-center rounded-full bg-pink px-6 py-2 text-center font-semibold text-white">
+            + New article
+          </Link>
+        </div>
       </div>
 
       {(sp.saved || sp.deleted) && (

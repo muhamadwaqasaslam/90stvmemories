@@ -66,6 +66,12 @@ const counts = (h: Record<string, string>): Counts => ({
   usView: n(h["us:view"]),
 });
 
+export interface TrafficSource {
+  source: string;
+  count: number;
+  pct: number;
+}
+
 export async function getDashboard(days: number) {
   const dayKeys = lastDays(days);
   const monthKeys = lastMonths(6);
@@ -74,7 +80,7 @@ export async function getDashboard(days: number) {
   const cmds: Cmd[] = [
     ...dayKeys.flatMap((k): Cmd[] => [["HGETALL", `d:${k}`], ["SCARD", `u:${k}`]]),
     ...monthKeys.flatMap((k): Cmd[] => [["HGETALL", `m:${k}`], ["SCARD", `um:${k}`], ["HGETALL", `c:${k}`]]),
-    ["LRANGE", "recent", 0, 29],
+    ["LRANGE", "recent", 0, 199],
     ...posts.map((p): Cmd => ["SCARD", `up:${p.slug}`]),
   ];
   const r = await run(cmds);
@@ -97,6 +103,52 @@ export async function getDashboard(days: number) {
 
   const recent = ((r[i++] as string[]) ?? []).map((s) => JSON.parse(s) as Viewer);
 
+  const sourceMap: Record<string, number> = {};
+  for (const v of recent) {
+    const rawRef = (v.ref || "").toLowerCase().trim();
+    let s = "Direct / None";
+    if (!rawRef || rawRef === "direct" || rawRef === "none") {
+      s = "Direct / Bookmark";
+    } else if (rawRef.includes("google.")) {
+      s = "Google Search";
+    } else if (rawRef.includes("facebook.") || rawRef.includes("fb.me")) {
+      s = "Facebook";
+    } else if (rawRef.includes("t.co") || rawRef.includes("twitter.") || rawRef.includes("x.com")) {
+      s = "Twitter / X";
+    } else if (rawRef.includes("instagram.")) {
+      s = "Instagram";
+    } else if (rawRef.includes("pinterest.")) {
+      s = "Pinterest";
+    } else if (rawRef.includes("bing.com")) {
+      s = "Bing Search";
+    } else if (rawRef.includes("yahoo.com")) {
+      s = "Yahoo";
+    } else if (rawRef.includes("duckduckgo.")) {
+      s = "DuckDuckGo";
+    } else if (rawRef.includes("reddit.")) {
+      s = "Reddit";
+    } else if (rawRef.includes("youtube.")) {
+      s = "YouTube";
+    } else {
+      try {
+        const u = new URL(rawRef.startsWith("http") ? rawRef : `https://${rawRef}`);
+        s = u.hostname.replace(/^www\./, "");
+      } catch {
+        s = rawRef.slice(0, 30);
+      }
+    }
+    sourceMap[s] = (sourceMap[s] ?? 0) + 1;
+  }
+
+  const totalRefs = recent.length || 1;
+  const trafficSources: TrafficSource[] = Object.entries(sourceMap)
+    .sort((a, b) => b[1] - a[1])
+    .map(([source, count]) => ({
+      source,
+      count,
+      pct: Math.round((count / totalRefs) * 100),
+    }));
+
   const perPost = posts.map((post) => {
     const t = { imp: 0, click: 0, view: 0 };
     for (const h of dayHashes) {
@@ -118,5 +170,5 @@ export async function getDashboard(days: number) {
   };
 
   const countries = Object.entries(countryTotals).sort((a, b) => b[1] - a[1]);
-  return { daily, monthly, perPost: perPost.sort((a, b) => b.imp - a.imp), totals, countries, recent };
+  return { daily, monthly, perPost: perPost.sort((a, b) => b.imp - a.imp), totals, countries, recent, trafficSources };
 }

@@ -52,6 +52,9 @@ async function uploadFile(file: File, blob: boolean, onProgress: (p: number) => 
 export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: boolean }) {
   const [error, action, pending] = useActionState(save, null);
 
+  const [title, setTitle] = useState(post?.title ?? "");
+  const [excerpt, setExcerpt] = useState(post?.excerpt ?? "");
+  const [tags, setTags] = useState(post?.tags?.join(", ") ?? "");
   const [content, setContent] = useState(post?.content ?? "");
   const [tab, setTab] = useState<"write" | "preview">("write");
   const [sel, setSel] = useState({ start: 0, end: 0 });
@@ -213,14 +216,95 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
     apply(rest, Math.max(0, ls - 1));
   }
 
+  // Real-time On-Page SEO calculation
+  const titleLen = title.trim().length;
+  const excerptLen = excerpt.trim().length;
+  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+  const parsedTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
+  const hasHeadings = /^(##|###)\s+/m.test(content);
+  const hasCover = Boolean(cover);
+
+  const checks = [
+    {
+      label: "Title Length",
+      ideal: "40–65 chars",
+      current: `${titleLen} chars`,
+      ok: titleLen >= 40 && titleLen <= 65,
+      warn: titleLen > 0 && (titleLen < 40 || titleLen > 65),
+      note: titleLen === 0 ? "Missing title" : titleLen < 40 ? "A bit short" : titleLen > 65 ? "May truncate on Google" : "Ideal for SEO",
+      points: titleLen >= 40 && titleLen <= 65 ? 20 : titleLen > 0 ? 10 : 0,
+    },
+    {
+      label: "Meta Excerpt",
+      ideal: "120–160 chars",
+      current: `${excerptLen} chars`,
+      ok: excerptLen >= 120 && excerptLen <= 160,
+      warn: excerptLen > 0 && (excerptLen < 120 || excerptLen > 160),
+      note: excerptLen === 0 ? "Empty snippet" : excerptLen < 120 ? "Short snippet" : excerptLen > 160 ? "May get trimmed" : "Optimal snippet",
+      points: excerptLen >= 120 && excerptLen <= 160 ? 20 : excerptLen > 0 ? 10 : 0,
+    },
+    {
+      label: "Keywords / Tags",
+      ideal: "3–6 tags",
+      current: `${parsedTags.length} tags`,
+      ok: parsedTags.length >= 3,
+      warn: parsedTags.length > 0 && parsedTags.length < 3,
+      note: parsedTags.length === 0 ? "No tags added" : parsedTags.length < 3 ? "Add 1–2 more" : "Great keyword targeting",
+      points: parsedTags.length >= 3 ? 20 : parsedTags.length > 0 ? 10 : 0,
+    },
+    {
+      label: "Word Count",
+      ideal: "600+ words",
+      current: `${wordCount} words`,
+      ok: wordCount >= 600,
+      warn: wordCount >= 300 && wordCount < 600,
+      note: wordCount === 0 ? "No content" : wordCount < 300 ? "Thin content" : wordCount < 600 ? "Decent, 600+ recommended" : "Great content depth",
+      points: wordCount >= 600 ? 20 : wordCount >= 300 ? 12 : wordCount > 0 ? 5 : 0,
+    },
+    {
+      label: "Subheadings",
+      ideal: "H2/H3 in text",
+      current: hasHeadings ? "Yes" : "None",
+      ok: hasHeadings,
+      warn: !hasHeadings && wordCount > 150,
+      note: hasHeadings ? "Good structure" : "Add ## headings",
+      points: hasHeadings ? 10 : 0,
+    },
+    {
+      label: "Cover Image",
+      ideal: "Required",
+      current: hasCover ? "Set" : "None",
+      ok: hasCover,
+      warn: !hasCover,
+      note: hasCover ? "Visual set" : "Missing cover",
+      points: hasCover ? 10 : 0,
+    },
+  ];
+
+  const totalScore = Math.min(100, checks.reduce((acc, c) => acc + c.points, 0));
+  const scoreBadge =
+    totalScore >= 80 ? "Good" : totalScore >= 50 ? "Fair" : "Needs Work";
+
   return (
     <form action={action} className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
       <input type="hidden" name="id" value={post?.id ?? ""} />
 
       <div className="min-w-0 space-y-5">
         <label className="block text-sm font-semibold">
-          Title
-          <input name="title" required defaultValue={post?.title} placeholder="Saturday Morning Cartoons: …" className={`${input} text-lg`} />
+          <div className="flex items-center justify-between">
+            <span>Title</span>
+            <span className={`text-xs font-normal ${titleLen >= 40 && titleLen <= 65 ? "font-bold text-emerald-600" : "text-ink/45"}`}>
+              {titleLen}/65 chars {titleLen >= 40 && titleLen <= 65 ? "✓" : ""}
+            </span>
+          </div>
+          <input
+            name="title"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Saturday Morning Cartoons: …"
+            className={`${input} text-lg`}
+          />
         </label>
 
         <div
@@ -421,10 +505,40 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
 
       <aside className="space-y-5 rounded-2xl pop bg-white p-5 lg:self-start">
         <label className="block text-sm font-semibold">
-          Short summary (shows on cards &amp; Google)
-          <textarea name="excerpt" rows={3} maxLength={300} defaultValue={post?.excerpt} className={input} />
+          <div className="flex items-center justify-between">
+            <span>Short summary (shows on cards &amp; Google)</span>
+            <span className={`text-xs font-normal ${excerptLen >= 120 && excerptLen <= 160 ? "font-bold text-emerald-600" : "text-ink/45"}`}>
+              {excerptLen}/160 {excerptLen >= 120 && excerptLen <= 160 ? "✓" : ""}
+            </span>
+          </div>
+          <textarea
+            name="excerpt"
+            rows={3}
+            maxLength={300}
+            value={excerpt}
+            onChange={(e) => setExcerpt(e.target.value)}
+            className={input}
+          />
           <span className="mt-1 block text-xs font-normal text-ink/50">SEO tip: aim for 120–160 characters and include the show name.</span>
         </label>
+
+        <label className="block text-sm font-semibold">
+          <div className="flex items-center justify-between">
+            <span>Keywords &amp; Tags</span>
+            <span className={`text-xs font-normal ${parsedTags.length >= 3 ? "font-bold text-emerald-600" : "text-ink/45"}`}>
+              {parsedTags.length} tags {parsedTags.length >= 3 ? "✓" : ""}
+            </span>
+          </div>
+          <input
+            name="tags"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            placeholder="e.g. 90s TV, Sitcoms, Friends, Rachel Green"
+            className={input}
+          />
+          <span className="mt-1 block text-xs font-normal text-ink/50">Comma-separated. Focus keywords help your article rank on search engines.</span>
+        </label>
+
         <label className="block text-sm font-semibold">
           Category
           <input name="category" defaultValue={post?.category ?? "Memories"} className={input} />
@@ -471,6 +585,47 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
             <option value="draft">Draft (hidden)</option>
           </select>
         </label>
+
+        {/* On-Page SEO Status */}
+        <div className="rounded-2xl border-2 border-ink/10 bg-paper/60 p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-ink/60">On-Page SEO Status</span>
+            <span
+              className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                totalScore >= 80 ? "bg-emerald-100 text-emerald-800" : totalScore >= 50 ? "bg-amber-100 text-amber-800" : "bg-rose-100 text-rose-800"
+              }`}
+            >
+              {totalScore}/100 · {scoreBadge}
+            </span>
+          </div>
+
+          <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-ink/10">
+            <div
+              className={`h-full transition-all duration-300 ${
+                totalScore >= 80 ? "bg-emerald-500" : totalScore >= 50 ? "bg-amber-500" : "bg-rose-500"
+              }`}
+              style={{ width: `${totalScore}%` }}
+            />
+          </div>
+
+          <ul className="mt-3.5 space-y-2 text-xs">
+            {checks.map((c) => (
+              <li key={c.label} className="flex items-center justify-between gap-2 border-b border-ink/5 pb-1 last:border-0 last:pb-0">
+                <span className="text-ink/75 font-medium">{c.label}</span>
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <span className="text-ink/50">{c.current}</span>
+                  {c.ok ? (
+                    <span className="text-emerald-600" title={c.note}>✓</span>
+                  ) : c.warn ? (
+                    <span className="text-amber-600" title={c.note}>⚠</span>
+                  ) : (
+                    <span className="text-rose-600" title={c.note}>✕</span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {error && <p role="alert" className="rounded-lg bg-pink/10 px-3 py-2 text-sm font-bold text-pink">{error}</p>}
 

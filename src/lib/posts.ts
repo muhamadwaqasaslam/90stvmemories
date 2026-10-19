@@ -10,6 +10,7 @@ export interface Post {
   category: string;
   theme: ThemeKey;
   imageUrl?: string;
+  tags?: string[];
   status: "published" | "draft";
   createdAt: string;
   updatedAt: string;
@@ -41,6 +42,9 @@ export async function getAllPosts(): Promise<Post[]> {
         const p = JSON.parse(v) as Post;
         if (p && p.category) {
           p.category = cleanCategory(p.category);
+        }
+        if (p && !Array.isArray(p.tags)) {
+          p.tags = [];
         }
         return p;
       } catch {
