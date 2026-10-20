@@ -69,7 +69,7 @@ export default async function Magazine({ searchParams }: { searchParams: Promise
             <div className="border-t-2 border-navy pt-4">
               <h2 className="text-xl text-navy">Popular</h2>
               <div className="mt-4 divide-y divide-black/15">
-                {all.slice(0, 3).map((p) => (
+                {stories.slice(0, 3).map((p) => (
                   <div key={p.id} className="py-4 first:pt-0">
                     <TrackedLink slug={p.slug} className="block text-lg leading-snug text-navy hover:underline">{p.title}</TrackedLink>
                     <p className="mt-2 line-clamp-3 font-serif text-sm leading-5">{p.excerpt}</p>
