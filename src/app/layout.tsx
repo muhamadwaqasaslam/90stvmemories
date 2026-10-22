@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   title: { default: "90s TV Memories | 90s Cartoons, Sitcoms & VHS Nostalgia", template: "%s | 90s TV Memories" },
   description: DEFAULT_DESC,
   applicationName: "90s TV Memories",
+  verification: { google: "google623db4c757b2ba52" },
   keywords: ["90s TV", "90s nostalgia", "Saturday morning cartoons", "TGIF sitcoms", "VHS rentals", "1990s television", "90s kids", "retro TV shows"],
   authors: [{ name: "90s TV Memories", url: SITE_URL }],
   creator: "90s TV Memories",
