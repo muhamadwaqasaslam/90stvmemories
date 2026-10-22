@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from "next";
 import { Bungee, Crimson_Text, Inter, Poppins, Roboto_Condensed, Titillium_Web, Yellowtail } from "next/font/google";
 import "./globals.css";
@@ -13,7 +14,6 @@ const yellowtail = Yellowtail({ weight: "400", subsets: ["latin"], variable: "--
 const bungee = Bungee({ weight: "400", subsets: ["latin"], variable: "--font-bungee" });
 const poppins = Poppins({ weight: ["500", "600", "700"], subsets: ["latin"], variable: "--font-poppins" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -48,6 +48,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-US" className={`${bungee.variable} ${poppins.variable} ${inter.variable} ${crimson.variable} ${titillium.variable} ${yellowtail.variable} ${condensed.variable}`}>
       <body className="min-h-screen overflow-x-hidden" suppressHydrationWarning>
         <JsonLd data={[organizationLd, websiteLd]} />
+
+        {/* Waust.at visitor tracker - fixed at bottom-left */}
+        <div
+          id="wau-tracker-box"
+          style={{
+            position: "fixed",
+            left: "10px",
+            bottom: "10px",
+            zIndex: 99999,
+          }}
+        >
+          <script
+            id="_wauvt6"
+            dangerouslySetInnerHTML={{
+              __html: 'var _wau = _wau || []; _wau.push(["dynamic", "tyok73rd86", "vt6", "c4302bffffff", "small"]);',
+            }}
+          />
+          <script async src="https://waust.at/d.js" />
+        </div>
+
         {children}
       </body>
     </html>
