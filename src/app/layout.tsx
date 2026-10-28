@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Bungee, Crimson_Text, Inter, Poppins, Roboto_Condensed, Titillium_Web, Yellowtail } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "../lib/site";
@@ -48,6 +49,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-US" className={`${bungee.variable} ${poppins.variable} ${inter.variable} ${crimson.variable} ${titillium.variable} ${yellowtail.variable} ${condensed.variable}`}>
       <body className="min-h-screen overflow-x-hidden" suppressHydrationWarning>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5861244705933198"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <JsonLd data={[organizationLd, websiteLd]} />
         {children}
       </body>
