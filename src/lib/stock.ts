@@ -8,5 +8,14 @@ export const NIGHT_IMAGE = "/images/stock/night.jpg";
 
 const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
 
-/** The post's own cover when it has one, otherwise a stable stock photo. */
-export const coverUrl = (post: Pick<Post, "imageUrl" | "slug">) => post.imageUrl || TV[hash(post.slug) % TV.length];
+/** 
+ * Returns the post's cover if valid. 
+ * If it points to the suspended Vercel blob storage or is empty, automatically falls back to clean retro TV stock photos!
+ */
+export const coverUrl = (post: Pick<Post, "imageUrl" | "slug">) => {
+  const url = post.imageUrl;
+  if (!url || url.includes("blob.vercel-storage.com")) {
+    return TV[hash(post.slug) % TV.length];
+  }
+  return url;
+};
