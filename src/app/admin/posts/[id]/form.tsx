@@ -550,7 +550,16 @@ export function EditorForm({ post, blobEnabled }: { post?: Post; blobEnabled: bo
             // eslint-disable-next-line @next/next/no-img-element
             <img src={cover} alt="Cover preview" className="mt-2 aspect-[16/10] w-full rounded-xl object-cover ring-1 ring-ink/10" />
           )}
-          <input type="hidden" name="imageUrl" value={cover} />
+          <div className="mt-2">
+            <input
+              type="text"
+              name="imageUrl"
+              value={cover}
+              onChange={(e) => setCover(e.target.value)}
+              placeholder="Paste Image URL here (e.g. https://.../photo.jpg)"
+              className="w-full rounded-lg border border-ink/20 px-3 py-2 text-sm focus:border-pink focus:outline-none"
+            />
+          </div>
           <div className="mt-2 flex flex-wrap gap-2">
             <button type="button" disabled={coverBusy} onClick={() => coverRef.current?.click()} className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white transition hover:bg-pink disabled:opacity-60">
               {coverBusy ? "Uploading…" : cover ? "Change" : "Upload cover"}
