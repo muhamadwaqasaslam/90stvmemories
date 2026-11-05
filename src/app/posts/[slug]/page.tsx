@@ -45,7 +45,7 @@ export default async function PostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
-  const more = (await getStoryPosts()).filter((p) => p.id !== post.id).slice(0, 3);
+  const more = (await getStoryPosts()).filter((p) => p.id !== post.id).slice(0, 6);
 
   return (
     <>
