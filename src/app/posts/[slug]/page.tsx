@@ -89,7 +89,27 @@ export default async function PostPage({ params }: Props) {
             <article className="-mt-0 min-w-0 bg-white p-5 shadow-[4px_6px_12px_rgba(0,0,0,0.15)] sm:p-12 lg:-mt-0">
               <Link href="/blog" className="text-sm text-navy hover:underline">← All stories</Link> <span className="text-slate">·</span> <Link href={`/posts/${post.slug}/classic`} className="text-sm text-navy hover:underline">Wide layout</Link>
               <p className="mb-8 mt-4 font-serif text-xl leading-relaxed text-slate">{post.excerpt}</p>
+              
               <Prose content={post.content} />
+
+              {/* High-CTR Monetag Direct Ad Banner inside Article */}
+              <div className="my-10 rounded-lg border-2 border-dashed border-[#2b4886]/30 bg-amber-50/60 p-6 text-center shadow-sm">
+                <span className="inline-block rounded bg-amber-400 px-3 py-1 font-condensed text-xs font-bold uppercase tracking-wider text-slate-900">
+                  Trending Nostalgia
+                </span>
+                <p className="mt-2.5 font-serif text-xl font-bold text-navy">
+                  Explore More Untold 90s TV Secrets &amp; Shocking Behind-The-Scenes Scandals
+                </p>
+                <p className="mt-1 text-xs text-slate">Discover what really happened to your favorite childhood icons today.</p>
+                <a
+                  href="https://uplcm.com/4/12216602"
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="mt-4 inline-flex items-center gap-2 rounded bg-navy px-8 py-3.5 font-serif text-base font-bold text-white shadow-md transition hover:bg-navy/90 hover:scale-[1.02]"
+                >
+                  <span>Click to Read Next Story »</span>
+                </a>
+              </div>
 
               {post.tags && post.tags.length > 0 && (
                 <div className="mt-10 border-t border-slate/15 pt-6">
@@ -109,6 +129,21 @@ export default async function PostPage({ params }: Props) {
             </article>
 
             <aside className="space-y-8 px-4 sm:px-0 lg:pt-16">
+              {/* Sidebar High-CTR Direct Ad Box */}
+              <div className="rounded border-2 border-navy/20 bg-gradient-to-br from-white to-amber-50/50 p-6 text-center shadow-[4px_6px_12px_rgba(0,0,0,0.12)]">
+                <span className="font-condensed text-xs font-bold uppercase tracking-widest text-slate/60">Featured Archive</span>
+                <h3 className="mt-2 font-serif text-xl font-bold text-navy">90s Retro Vault</h3>
+                <p className="mt-2 text-xs leading-relaxed text-slate">Exclusive cast reunions, tragic endings, and forgotten shows you loved.</p>
+                <a
+                  href="https://uplcm.com/4/12216602"
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="mt-4 block rounded bg-navy py-3 font-serif text-sm font-bold text-white shadow transition hover:bg-navy/90"
+                >
+                  View Exclusive Access »
+                </a>
+              </div>
+
               {more.length > 0 && (
                 <div className="bg-white p-6 shadow-[4px_6px_12px_rgba(0,0,0,0.15)]">
                   <h2 className="text-2xl text-navy">Keep reading</h2>
