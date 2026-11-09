@@ -61,6 +61,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="afterInteractive"
         />
         <Script
+          src="https://nap5k.com/tag.min.js"
+          data-zone="12226907"
+          strategy="afterInteractive"
+        />
+        <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-XQ5F2LYKCX"
           strategy="afterInteractive"
