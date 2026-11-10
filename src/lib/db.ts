@@ -10,18 +10,29 @@ export const usingRedis = Boolean(URL && TOKEN);
 
 /* ---------- Upstash Redis (REST, serverless friendly) ---------- */
 async function redis(cmds: Cmd[]): Promise<unknown[]> {
-  const res = await fetch(`${URL}/pipeline`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" },
-    body: JSON.stringify(cmds),
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`Redis ${res.status}`);
-  const out = (await res.json()) as { result?: unknown; error?: string }[];
-  return out.map((r) => {
-    if (r.error) throw new Error(r.error);
-    return r.result;
-  });
+  try {
+    const res = await fetch(`${URL}/pipeline`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type": "application/json" },
+      body: JSON.stringify(cmds),
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      console.warn(`Redis HTTP ${res.status}, falling back to local DB.`);
+      return local(cmds);
+    }
+    const out = (await res.json()) as { result?: unknown; error?: string }[];
+    return out.map((r) => {
+      if (r.error) {
+        console.warn(`Redis command error: ${r.error}`);
+        throw new Error(r.error);
+      }
+      return r.result;
+    });
+  } catch (err) {
+    console.warn("Redis request failed, seamlessly falling back to local database:", err);
+    return local(cmds);
+  }
 }
 
 /* ---------- Local JSON fallback (dev / read-only hosts) ---------- */

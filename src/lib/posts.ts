@@ -1,5 +1,6 @@
 import { run, toObj } from "./db";
 import type { ThemeKey } from "./themes";
+import fallbackPosts from "../data/fallbackPosts.json";
 
 export interface Post {
   id: string;
@@ -34,25 +35,34 @@ export function cleanCategory(cat?: string): string {
 const KEY = "posts";
 
 export async function getAllPosts(): Promise<Post[]> {
-  const [raw] = await run([["HGETALL", KEY]]);
-  const map = toObj(raw);
-  return Object.values(map)
-    .map((v) => {
-      try {
-        const p = JSON.parse(v) as Post;
-        if (p && p.category) {
-          p.category = cleanCategory(p.category);
+  try {
+    const [raw] = await run([["HGETALL", KEY]]);
+    const map = toObj(raw);
+    const list = Object.values(map)
+      .map((v) => {
+        try {
+          const p = JSON.parse(v) as Post;
+          if (p && p.category) {
+            p.category = cleanCategory(p.category);
+          }
+          if (p && !Array.isArray(p.tags)) {
+            p.tags = [];
+          }
+          return p;
+        } catch {
+          return null as unknown as Post;
         }
-        if (p && !Array.isArray(p.tags)) {
-          p.tags = [];
-        }
-        return p;
-      } catch {
-        return null as unknown as Post;
-      }
-    })
-    .filter((p): p is Post => Boolean(p && p.slug))
-    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      })
+      .filter((p): p is Post => Boolean(p && p.slug))
+      .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+      
+    if (list.length > 0) {
+      return list;
+    }
+  } catch (err) {
+    console.warn("Failed to load posts from DB, using fallbackPosts:", err);
+  }
+  return fallbackPosts as unknown as Post[];
 }
 
 export async function getPublished(): Promise<Post[]> {
