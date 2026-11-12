@@ -39,6 +39,9 @@ function inline(text: string): ReactNode[] {
  * Media (image or video) on its own line: ![caption](url){w=60 align=center}
  */
 export function Prose({ content }: { content: string }) {
+  if (content.includes("<div") || content.includes("<p") || content.includes("<img")) {
+    return <div className="prose-90s" dangerouslySetInnerHTML={{ __html: content }} />;
+  }
   const blocks = content.replace(/\r\n/g, "\n").split(/\n{2,}/);
   return (
     <div className="prose-90s">
