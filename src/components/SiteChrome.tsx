@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Arrow, Facebook, Instagram, Mail, Pinterest, Search, Twitter, Youtube } from "./icons";
 import { MailForm } from "./MailForm";
 import { MobileNav } from "./MobileNav";
+import { FB_PAGES } from "../lib/site";
 
 /** Own mark: a retro TV with rabbit ears, plus wordmark. */
 export function Logo({ dark = false }: { dark?: boolean }) {
@@ -26,9 +27,31 @@ export function Logo({ dark = false }: { dark?: boolean }) {
 export function Socials({ className = "" }: { className?: string }) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      {[Pinterest, Instagram, Twitter, Facebook].map((Icon, i) => (
-        <Link key={i} href="/contact" aria-label="Follow us"><Icon /></Link>
-      ))}
+      <a
+        href={FB_PAGES.beverlyHills.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Beverly Hills 90210 Fan (8.2K Fans)"
+        aria-label="Beverly Hills 90210 Fan Facebook Page"
+        className="inline-flex items-center gap-1 hover:text-[#00D9FF] transition"
+      >
+        <Facebook />
+        <span className="text-[10px] font-bold">90210</span>
+      </a>
+      <a
+        href={FB_PAGES.fullHouse.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Full House Fan Club (2.5K Fans)"
+        aria-label="Full House Fan Club Facebook Page"
+        className="inline-flex items-center gap-1 hover:text-[#00D9FF] transition"
+      >
+        <Facebook />
+        <span className="text-[10px] font-bold">Full House</span>
+      </a>
+      <Link href="/contact" aria-label="Follow on Pinterest"><Pinterest /></Link>
+      <Link href="/contact" aria-label="Follow on Instagram"><Instagram /></Link>
+      <Link href="/contact" aria-label="Follow on Twitter"><Twitter /></Link>
     </div>
   );
 }
@@ -106,11 +129,26 @@ export function FooterColumns() {
           <p className="mt-3 font-serif text-lg">{email || "Use the contact page"}</p>
         </div>
         <div>
-          <h3 className="text-xl text-navy">Follow along</h3>
-          <div className="mt-4 flex justify-center gap-5 text-navy">
-            {[Facebook, Twitter, Instagram, Youtube].map((Icon, i) => (
-              <Link key={i} href="/contact" aria-label="Follow us"><Icon className="h-4 w-4" /></Link>
-            ))}
+          <h3 className="text-xl text-navy">Facebook Communities</h3>
+          <div className="mt-3 flex flex-col gap-2 text-sm">
+            <a
+              href={FB_PAGES.beverlyHills.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 font-bold text-[#1877F2] hover:underline"
+            >
+              <Facebook className="h-4 w-4" />
+              <span>Beverly Hills 90210 ({FB_PAGES.beverlyHills.followers})</span>
+            </a>
+            <a
+              href={FB_PAGES.fullHouse.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 font-bold text-[#1877F2] hover:underline"
+            >
+              <Facebook className="h-4 w-4" />
+              <span>Full House Fan Club ({FB_PAGES.fullHouse.followers})</span>
+            </a>
           </div>
         </div>
         <div>

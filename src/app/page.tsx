@@ -3,7 +3,8 @@ import { coverUrl } from "../lib/stock";
 import { getStoryPosts, type Post } from "../lib/posts";
 import { fmtDate } from "../lib/dates";
 import { abs, JsonLd } from "../lib/seo";
-import { Search } from "../components/icons";
+import { Facebook, Search } from "../components/icons";
+import { FB_PAGES } from "../lib/site";
 
 export const revalidate = 60;
 
@@ -113,8 +114,32 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
             </Link>
           </nav>
 
-          {/* Right Action: Neon LOGIN button with pink border */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          {/* Right Action: Facebook fan links & Neon LOGIN */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Facebook Fan Pages Direct Header Links */}
+            <div className="hidden lg:flex items-center gap-2">
+              <a
+                href={FB_PAGES.beverlyHills.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Beverly Hills 90210 Fan (8.2K)"
+                className="flex items-center gap-1 rounded-full border border-[#00D9FF]/40 bg-[#0a0a23] px-2.5 py-1 text-[11px] font-bold text-[#00D9FF] hover:border-[#00D9FF] hover:bg-[#00D9FF]/10 transition"
+              >
+                <Facebook className="h-3 w-3" />
+                <span>90210 ({FB_PAGES.beverlyHills.followers})</span>
+              </a>
+              <a
+                href={FB_PAGES.fullHouse.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Full House Fan Club (2.5K)"
+                className="flex items-center gap-1 rounded-full border border-[#FFD24A]/40 bg-[#0a0a23] px-2.5 py-1 text-[11px] font-bold text-[#FFD24A] hover:border-[#FFD24A] hover:bg-[#FFD24A]/10 transition"
+              >
+                <Facebook className="h-3 w-3" />
+                <span>Full House ({FB_PAGES.fullHouse.followers})</span>
+              </a>
+            </div>
+
             <Link
               href="/admin/login"
               className="rounded-full border-2 border-[#FF1493] bg-[#0a0a23] px-4 py-1.5 font-bold uppercase text-xs tracking-widest text-[#FF1493] shadow-[0_0_15px_rgba(255,20,147,0.5)] hover:bg-[#FF1493] hover:text-white transition duration-200 hover:shadow-[0_0_25px_rgba(255,20,147,0.85)]"
@@ -128,11 +153,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
         </div>
 
         {/* Mobile quick-nav row */}
-        <div className="flex items-center justify-center gap-4 overflow-x-auto border-t border-white/10 px-4 py-2 font-bold uppercase text-xs tracking-wider md:hidden">
+        <div className="flex items-center justify-center gap-3 overflow-x-auto border-t border-white/10 px-4 py-2 font-bold uppercase text-xs tracking-wider md:hidden">
           <Link href="/" className="text-[#00D9FF]">Home</Link>
           <Link href="/blog?cat=90s+TV+Sitcoms" className="text-[#F5E6C8]">Shows</Link>
-          <Link href="/blog" className="text-[#F5E6C8]">Quizzes</Link>
-          <Link href="/features" className="text-[#F5E6C8]">Shop</Link>
+          <a href={FB_PAGES.beverlyHills.url} target="_blank" rel="noopener noreferrer" className="text-[#00D9FF] flex items-center gap-1">
+            <Facebook className="h-3 w-3" /> 90210
+          </a>
+          <a href={FB_PAGES.fullHouse.url} target="_blank" rel="noopener noreferrer" className="text-[#FFD24A] flex items-center gap-1">
+            <Facebook className="h-3 w-3" /> Full House
+          </a>
           <Link href="/about" className="text-[#F5E6C8]">About</Link>
         </div>
       </header>
@@ -414,6 +443,141 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
       </section>
 
       {/* ========================================================
+          3B. FACEBOOK COMMUNITIES SHOWCASE (Page Plugin & Like Buttons)
+          ======================================================== */}
+      <section className="relative px-4 py-16 sm:px-6 sm:py-20 lg:px-12 bg-[#08051a] border-t-2 border-b-2 border-[#00D9FF]/30">
+        <div className="mx-auto max-w-[1366px]">
+          <div className="mb-10 text-center">
+            <div className="inline-block -rotate-1 rounded bg-[#1877F2] px-4 py-1 font-mono text-xs font-bold tracking-widest text-white shadow-[2px_2px_0px_#000]">
+              ★ OVER 10,000+ 90s TV FANS ON FACEBOOK ★
+            </div>
+            <h2 className="mt-3 font-[family-name:var(--font-bebas)] text-4xl sm:text-5xl lg:text-6xl tracking-wider text-[#00D9FF] text-stroke-pink drop-shadow-[0_0_20px_rgba(0,217,255,0.5)]">
+              JOIN OUR FACEBOOK FAN CLUBS
+            </h2>
+            <p className="mt-2 text-sm sm:text-base text-[#F5E6C8] font-serif max-w-2xl mx-auto">
+              Follow our official communities for daily nostalgic clips, rare cast photos, discussions, and exclusive 90s trivia.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2">
+            {/* Fan Club 1: Beverly Hills 90210 */}
+            <div className="flex flex-col rounded-2xl border-2 border-[#00D9FF] bg-[#12082b] p-6 shadow-[6px_6px_0px_#00D9FF] relative overflow-hidden">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1877F2] text-white shadow-md">
+                    <Facebook className="h-6 w-6" />
+                  </span>
+                  <div>
+                    <h3 className="font-[family-name:var(--font-bebas)] text-2xl sm:text-3xl tracking-wide text-white">
+                      {FB_PAGES.beverlyHills.name}
+                    </h3>
+                    <p className="text-xs font-mono text-[#00D9FF]">
+                      ★ {FB_PAGES.beverlyHills.followers} Nostalgic Fans • Daily Peach Pit Memories
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={FB_PAGES.beverlyHills.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-[#00D9FF] bg-[#1877F2] px-4 py-1.5 font-bold uppercase text-xs tracking-wider text-white shadow hover:scale-105 transition"
+                >
+                  Like Page
+                </a>
+              </div>
+
+              <p className="mt-4 font-serif text-sm text-[#F5E6C8]">
+                {FB_PAGES.beverlyHills.description}
+              </p>
+
+              {/* Embedded Facebook Page Plugin iframe */}
+              <div className="mt-5 overflow-hidden rounded-xl border border-white/10 bg-black/40 p-1 flex justify-center">
+                <iframe
+                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(FB_PAGES.beverlyHills.url)}&tabs=timeline&width=500&height=300&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                  width="100%"
+                  height="300"
+                  style={{ border: "none", overflow: "hidden" }}
+                  scrolling="no"
+                  frameBorder="0"
+                  allowFullScreen={true}
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  title="Beverly Hills 90210 Fan Facebook Page Plugin"
+                  className="rounded-lg"
+                />
+              </div>
+
+              <a
+                href={FB_PAGES.beverlyHills.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#1877F2] to-[#00D9FF] py-3 text-center font-bold uppercase text-xs tracking-wider text-white shadow hover:brightness-110 transition"
+              >
+                <Facebook className="h-4 w-4" />
+                <span>Follow {FB_PAGES.beverlyHills.name} on Facebook</span>
+              </a>
+            </div>
+
+            {/* Fan Club 2: Full House Fan Club */}
+            <div className="flex flex-col rounded-2xl border-2 border-[#FF1493] bg-[#12082b] p-6 shadow-[6px_6px_0px_#FF1493] relative overflow-hidden">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#1877F2] text-white shadow-md">
+                    <Facebook className="h-6 w-6" />
+                  </span>
+                  <div>
+                    <h3 className="font-[family-name:var(--font-bebas)] text-2xl sm:text-3xl tracking-wide text-white">
+                      {FB_PAGES.fullHouse.name}
+                    </h3>
+                    <p className="text-xs font-mono text-[#FFD24A]">
+                      ★ {FB_PAGES.fullHouse.followers} Tanner Family Fans • TGIF Sitcom Gold
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={FB_PAGES.fullHouse.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-[#FF1493] bg-[#1877F2] px-4 py-1.5 font-bold uppercase text-xs tracking-wider text-white shadow hover:scale-105 transition"
+                >
+                  Like Page
+                </a>
+              </div>
+
+              <p className="mt-4 font-serif text-sm text-[#F5E6C8]">
+                {FB_PAGES.fullHouse.description}
+              </p>
+
+              {/* Embedded Facebook Page Plugin iframe */}
+              <div className="mt-5 overflow-hidden rounded-xl border border-white/10 bg-black/40 p-1 flex justify-center">
+                <iframe
+                  src={`https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(FB_PAGES.fullHouse.url)}&tabs=timeline&width=500&height=300&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`}
+                  width="100%"
+                  height="300"
+                  style={{ border: "none", overflow: "hidden" }}
+                  scrolling="no"
+                  frameBorder="0"
+                  allowFullScreen={true}
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  title="Full House Fan Club Facebook Page Plugin"
+                  className="rounded-lg"
+                />
+              </div>
+
+              <a
+                href={FB_PAGES.fullHouse.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#1877F2] to-[#FF1493] py-3 text-center font-bold uppercase text-xs tracking-wider text-white shadow hover:brightness-110 transition"
+              >
+                <Facebook className="h-4 w-4" />
+                <span>Follow {FB_PAGES.fullHouse.name} on Facebook</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
           4. NEWSLETTER FOOTER (Beige Input & Pink SUBSCRIBE)
           ======================================================== */}
       <footer className="relative mt-20 border-t-2 border-[#FF1493]/40 bg-[#070517] pt-16 pb-12 text-[#F5E6C8]">
@@ -462,7 +626,25 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ c
                 90s TV MEMORIES
               </span>
             </div>
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-medium text-sm text-[#F5E6C8]/80">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-medium text-sm text-[#F5E6C8]/80">
+              <a
+                href={FB_PAGES.beverlyHills.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[#00D9FF] hover:underline"
+              >
+                <Facebook className="h-3.5 w-3.5" />
+                <span>90210 Fan ({FB_PAGES.beverlyHills.followers})</span>
+              </a>
+              <a
+                href={FB_PAGES.fullHouse.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[#FFD24A] hover:underline"
+              >
+                <Facebook className="h-3.5 w-3.5" />
+                <span>Full House Fan ({FB_PAGES.fullHouse.followers})</span>
+              </a>
               <Link href="/about" className="hover:text-[#00D9FF] transition">About</Link>
               <Link href="/contact" className="hover:text-[#00D9FF] transition">Contact</Link>
               <Link href="/posts/privacy-policy" className="hover:text-[#00D9FF] transition">Privacy Policy</Link>

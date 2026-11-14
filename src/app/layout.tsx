@@ -39,7 +39,15 @@ export const metadata: Metadata = {
     url: "/",
     title: "90s TV Memories | 90s Cartoons, Sitcoms & VHS Nostalgia",
     description: DEFAULT_DESC,
-    images: [{ url: OG_IMAGE, width: 1400, height: 928, alt: "A retro 90s television set" }],
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "A retro 90s television set and nostalgia memories",
+      },
+    ],
   },
   twitter: { card: "summary_large_image", title: "90s TV Memories", description: DEFAULT_DESC, images: [OG_IMAGE] },
 };

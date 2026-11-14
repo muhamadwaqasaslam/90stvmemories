@@ -7,6 +7,7 @@ import { COOKIE, checkPassword, isAuthed, makeToken } from "../../lib/auth";
 import { deletePost, getAllPosts, getPostById, savePost, slugify, type Post } from "../../lib/posts";
 import { deleteMessage, setRead } from "../../lib/messages";
 import { THEMES, type ThemeKey } from "../../lib/themes";
+import { autoShareToFacebook } from "../../lib/facebook";
 
 async function requireAdmin() {
   if (!(await isAuthed((await cookies()).get(COOKIE)?.value))) redirect("/admin/login");
@@ -69,6 +70,10 @@ export async function save(_: string | null, form: FormData): Promise<string | n
     updatedAt: now,
   };
   await savePost(post);
+  if (post.status === "published") {
+    // Automatically share to Facebook Pages via Graph API
+    await autoShareToFacebook(post).catch((err) => console.warn("FB auto-share error:", err));
+  }
   revalidatePath("/");
   revalidatePath(`/posts/${slug}`);
   redirect("/admin/posts?saved=1");
