@@ -62,7 +62,7 @@ export async function getAllPosts(): Promise<Post[]> {
   } catch (err) {
     console.warn("Failed to load posts from DB, using fallbackPosts:", err);
   }
-  return fallbackPosts as unknown as Post[];
+  return [...(fallbackPosts as unknown as Post[])].sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 }
 
 export async function getPublished(): Promise<Post[]> {
@@ -74,7 +74,17 @@ export async function getStoryPosts(): Promise<Post[]> {
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-  return (await getAllPosts()).find((p) => p.slug === slug && p.status === "published");
+  const posts = await getAllPosts();
+  const direct = posts.find((p) => p.slug === slug && p.status === "published");
+  if (direct) return direct;
+
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const target = norm(slug);
+  return posts.find((p) => {
+    if (p.status !== "published") return false;
+    const cur = norm(p.slug);
+    return cur === target || cur.includes(target) || target.includes(cur);
+  });
 }
 
 export async function getPostById(id: string): Promise<Post | undefined> {

@@ -12,31 +12,10 @@ function send(type: "imp" | "click" | "view", slug: string) {
   }
 }
 
-/** Article card: counts an impression when it is ~60% visible, and a click when opened. */
+/** Article card link: tracks clicks when clicked. */
 export function TrackedLink({ slug, className, children }: { slug: string; className?: string; children: ReactNode }) {
-  const ref = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !("IntersectionObserver" in window)) return;
-    const seen = `imp:${slug}`;
-    if (sessionStorage.getItem(seen)) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          sessionStorage.setItem(seen, "1");
-          send("imp", slug);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.6 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [slug]);
-
   return (
-    <Link ref={ref} href={`/posts/${slug}`} className={className} onClick={() => send("click", slug)}>
+    <Link href={`/posts/${slug}`} className={className} onClick={() => send("click", slug)}>
       {children}
     </Link>
   );
