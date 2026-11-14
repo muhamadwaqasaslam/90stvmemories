@@ -41,9 +41,9 @@ export default async function About() {
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
 
   return (
-    <>
+    <div className="min-h-screen bg-[#0a0a23] text-white selection:bg-[#FF1493] selection:text-white">
       <Header />
-      <main>
+      <main className="relative z-10 bg-gradient-to-b from-[#1a0a3a] via-[#10082b] to-[#0a0a23] pb-24">
         <JsonLd
           data={[
             {
@@ -55,83 +55,110 @@ export default async function About() {
             breadcrumbLd([["Home", "/"], ["About", "/about"]]),
           ]}
         />
-        <Banner title="About Us" />
+        <Banner title="About 90s TV Memories" />
 
         <section className="mx-auto max-w-4xl px-6 pb-4 pt-16 text-center">
-          <h2 className="text-2xl uppercase text-navy sm:text-3xl">A love letter to the golden age of TV</h2>
-          <div className="mt-6 space-y-4 font-serif text-lg leading-7">
+          <span className="font-mono text-xs uppercase tracking-widest text-[#00D9FF]">📼 Our Mission</span>
+          <h2 className="mt-2 font-head text-3xl sm:text-5xl font-black uppercase tracking-wider text-[#FF1493] drop-shadow-[0_0_15px_rgba(255,20,147,0.6)]">
+            A Love Letter to the Golden Age of TV
+          </h2>
+          <div className="mt-6 space-y-4 text-base sm:text-lg leading-relaxed text-[#F5E6C8]">
             <p>
-              Growing up in the 90s meant one family TV, a handful of channels and a weekly schedule that felt like a calendar of events. Saturday morning belonged to cartoons. Friday night belonged to the whole family on the couch.
+              Growing up in the 90s meant one family TV, a handful of channels, and a weekly schedule that felt like an appointment with destiny. Saturday morning belonged to cartoons. Friday night belonged to the whole family gathered around TGIF.
             </p>
             <p>
-              We started this site to keep those moments alive. Not as a museum, but as a place to smile, share a memory and remember that the best part of the shows was who we watched them with.
+              We built 90s TV Memories to keep those moments alive. Not as a dusty museum, but as a vibrant playground to smile, relive classic memories, and remember that the best part of the shows was who we watched them with.
             </p>
-            <p className="font-serif text-xl">
-              {posts.length} stories across {categories || topics.length} topics.{" "}
-              {email && <a href={`mailto:${email}`} className="text-navy hover:underline">{email}</a>}
+            <p className="font-mono text-sm text-[#39FF14]">
+              ★ {posts.length} VHS tapes archived across {categories || topics.length} retro categories.{" "}
+              {email && <a href={`mailto:${email}`} className="text-[#00D9FF] underline hover:text-[#FF1493] transition">{email}</a>}
             </p>
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1100px] px-6 pt-16">
-          <h2 className="text-center text-2xl uppercase text-navy sm:text-3xl">What you&apos;ll find here</h2>
-          <div className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Topics Grid as VHS Cards */}
+        <section className="mx-auto max-w-[1200px] px-6 pt-16">
+          <h2 className="text-center font-head text-3xl sm:text-4xl uppercase tracking-wider text-[#00D9FF] drop-shadow-[0_0_15px_rgba(0,217,255,0.5)]">
+            What You&apos;ll Find In The Vault
+          </h2>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {topics.map(([icon, title, text]) => (
-              <Link key={title} href={`/?cat=${encodeURIComponent(title)}#stories`} className="group text-center">
-                <span className="text-3xl" aria-hidden>{icon}</span>
-                <h3 className="mt-2 text-2xl text-navy group-hover:underline">{title}</h3>
-                <p className="mt-2 font-serif text-xl leading-6">{text}</p>
+              <Link
+                key={title}
+                href={`/blog?cat=${encodeURIComponent(title)}`}
+                className="group flex flex-col rounded-xl border border-black/20 bg-[#F2E8C9] p-6 text-black shadow-[4px_6px_0px_#000000] transition-all hover:-translate-y-1 hover:shadow-[6px_10px_0px_#FF1493]"
+              >
+                <div className="flex items-center justify-between border-b border-black/15 pb-3">
+                  <span className="text-3xl" aria-hidden>{icon}</span>
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#FF1493]">SP • 120</span>
+                </div>
+                <h3 className="mt-4 font-head text-2xl font-bold uppercase tracking-wide text-black group-hover:text-[#FF1493] transition">{title}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-black/75">{text}</p>
+                <span className="mt-auto pt-4 inline-flex items-center gap-1 font-head text-sm font-bold uppercase tracking-wider text-[#FF1493]">
+                  Explore Tapes →
+                </span>
               </Link>
             ))}
           </div>
         </section>
 
+        {/* Values Section */}
         <section className="mx-auto max-w-[1100px] px-6 pt-20">
-          <h2 className="text-center text-2xl uppercase text-navy sm:text-3xl">How we write</h2>
-          <div className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2">
+          <h2 className="text-center font-head text-3xl sm:text-4xl uppercase tracking-wider text-[#FF1493] drop-shadow-[0_0_15px_rgba(255,20,147,0.5)]">
+            How We Tell These Stories
+          </h2>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
             {values.map(([title, text]) => (
-              <div key={title} className="text-center">
-                <h3 className="text-2xl text-navy">{title}</h3>
-                <p className="mx-auto mt-2 max-w-sm font-serif text-xl leading-6">{text}</p>
+              <div key={title} className="rounded-xl border border-white/10 bg-[#160a33] p-6 text-left shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#39FF14]">📼 Core Standard</span>
+                <h3 className="mt-2 font-head text-2xl uppercase tracking-wider text-[#F5E6C8]">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#F5E6C8]/80">{text}</p>
               </div>
             ))}
           </div>
         </section>
 
+        {/* FAQs */}
         <section className="mx-auto max-w-3xl px-6 pt-20">
-          <h2 className="text-center text-2xl uppercase text-navy sm:text-3xl">Questions</h2>
-          <div className="mt-8 divide-y divide-black/20 border-y border-black/20">
+          <h2 className="text-center font-head text-3xl sm:text-4xl uppercase tracking-wider text-[#00D9FF]">
+            Frequently Asked Questions
+          </h2>
+          <div className="mt-8 divide-y divide-white/10 rounded-2xl border border-white/10 bg-[#160a33] p-6">
             {faqs.map(([q, a]) => (
-              <details key={q} className="group py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-xl">
+              <details key={q} className="group py-4 first:pt-0 last:pb-0">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-head text-xl uppercase tracking-wider text-[#F5E6C8] hover:text-[#FF1493] transition">
                   {q}
-                  <span className="text-2xl text-navy transition group-open:rotate-45" aria-hidden>+</span>
+                  <span className="text-2xl text-[#00D9FF] transition group-open:rotate-45" aria-hidden>+</span>
                 </summary>
-                <p className="mt-3 font-serif text-lg leading-7">{a}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[#F5E6C8]/80">{a}</p>
               </details>
             ))}
           </div>
         </section>
 
+        {/* Call to action */}
         <section className="mx-auto max-w-3xl px-6 pt-20 text-center">
-          <h2 className="text-2xl uppercase text-navy sm:text-3xl">Got a TV memory to share?</h2>
-          <p className="mx-auto mt-3 max-w-md font-serif text-xl leading-7">
-            Tell us your favorite show, the snack that went with it, or the rule your house had about the remote.
+          <h2 className="font-head text-3xl sm:text-4xl uppercase tracking-wider text-[#FF1493]">Got a TV Memory to Share?</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm sm:text-base text-[#F5E6C8]/90">
+            Tell us your favorite show, the snack that went with it, or the rule your house had about the remote!
           </p>
-          <div className="mt-7 flex flex-wrap justify-center gap-3">
-            {email && (
-              <a href={`mailto:${email}`} className="bg-navy px-8 py-3 text-[15px] font-bold uppercase text-white">Email us</a>
-            )}
-            <Link href="/#stories" className="border border-navy px-8 py-3 text-[15px] font-bold uppercase text-navy hover:bg-navy hover:text-white">
-              Read the latest stories
+          <div className="mt-7 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/contact"
+              className="rounded-full bg-[#FF1493] px-8 py-3.5 font-head text-lg font-bold uppercase tracking-wider text-white shadow-[0_0_20px_rgba(255,20,147,0.7)] hover:bg-[#ff3baf] transition"
+            >
+              Send Us Your Memory
+            </Link>
+            <Link
+              href="/blog"
+              className="rounded-full border-2 border-[#00D9FF] bg-[#0a0a23] px-8 py-3.5 font-head text-lg font-bold uppercase tracking-wider text-[#00D9FF] shadow-[0_0_15px_rgba(0,217,255,0.4)] hover:bg-[#00D9FF] hover:text-black transition"
+            >
+              Browse All Stories →
             </Link>
           </div>
-          <p className="mt-8 text-sm text-slate">
-            90s TV Memories is an independent fan site and is not affiliated with any network, studio or brand mentioned. All trademarks belong to their owners.
-          </p>
         </section>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FooterColumns, Logo, NAV } from "../../components/SiteChrome";
-import { Btn, Pagination, PostWide, paginate } from "../../components/Blocks";
-import { Chevron, Search } from "../../components/icons";
+import { FooterColumns, Header } from "../../components/SiteChrome";
+import { Pagination, PostWide, paginate } from "../../components/Blocks";
 import { Cover } from "../../components/PostCard";
 import { TrackedLink } from "../../components/Tracked";
 import { MailForm } from "../../components/MailForm";
@@ -25,67 +24,126 @@ export default async function Magazine({ searchParams }: { searchParams: Promise
   const href = (n: number) => `/magazine?${new URLSearchParams({ ...(cat && { cat }), page: String(n) })}`;
 
   return (
-    <>
-      <header className="bg-white">
-        <div className="mx-auto flex max-w-[1366px] flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:px-16">
-          <Logo />
-          <form action="/blog" className="flex w-full max-w-sm items-center border border-black/30 px-3 py-2 sm:w-auto">
-            <Search className="h-4 w-4 text-slate" />
-            <input name="q" placeholder="Search stories" aria-label="Search stories" className="ml-2 w-full min-w-0 font-serif outline-none sm:w-64" />
-          </form>
-        </div>
-        <div className="border-y-2 border-navy">
-          <nav className="mx-auto flex max-w-[1366px] flex-wrap justify-center gap-x-1 px-4 text-xs uppercase sm:px-6 sm:text-sm lg:px-16">
-            <Link href="/magazine" className={`px-3 py-3 sm:px-6 ${!cat ? "bg-navy text-white" : "hover:text-navy"}`}>All</Link>
-            {categories.map((c) => (
-              <Link key={c} href={`/magazine?cat=${encodeURIComponent(c)}`} className={`px-3 py-3 sm:px-6 ${cat === c ? "bg-navy text-white" : "hover:text-navy"}`}>{c}</Link>
-            ))}
-            {NAV.slice(4).map(([l, h]) => <Link key={l} href={h} className="px-3 py-3 sm:px-6 hover:text-navy">{l}</Link>)}
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#0a0a23] text-white selection:bg-[#FF1493] selection:text-white">
+      <Header />
 
-      <main className="mx-auto max-w-[1366px] px-6 py-10 lg:px-16">
+      {/* Category Subheader */}
+      <div className="border-b border-white/10 bg-[#160a33] text-xs uppercase tracking-wider">
+        <nav className="mx-auto flex max-w-[1366px] flex-wrap items-center justify-center gap-2 px-4 py-3 sm:px-6">
+          <Link
+            href="/magazine"
+            className={`rounded-full px-4 py-1.5 font-bold transition ${
+              !cat ? "bg-[#FF1493] text-white shadow-[0_0_10px_rgba(255,20,147,0.7)]" : "text-[#F5E6C8] hover:text-[#00D9FF]"
+            }`}
+          >
+            All Archives
+          </Link>
+          {categories.map((c) => (
+            <Link
+              key={c}
+              href={`/magazine?cat=${encodeURIComponent(c)}`}
+              className={`rounded-full px-4 py-1.5 font-bold transition ${
+                cat === c ? "bg-[#FF1493] text-white shadow-[0_0_10px_rgba(255,20,147,0.7)]" : "text-[#F5E6C8] hover:text-[#00D9FF]"
+              }`}
+            >
+              {c}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <main className="mx-auto max-w-[1366px] px-4 sm:px-6 py-10 lg:px-12">
         {lead && (
-          <section className="grid gap-8 border border-black/10 border-t-2 border-t-navy p-6 md:grid-cols-2">
-            <Cover post={lead} big />
-            <div className="flex flex-col justify-center">
-              <span className="w-fit bg-navy px-2 py-0.5 font-condensed text-xs font-bold uppercase text-white">{lead.category}</span>
-              <h1 className="mt-4 text-3xl leading-snug text-navy">{lead.title}</h1>
-              <p className="mt-4 line-clamp-4 font-serif text-lg leading-7">{lead.excerpt}</p>
-              <TrackedLink slug={lead.slug} className="mt-6 inline-flex w-fit items-center gap-2 bg-navy px-5 py-2 font-serif text-sm text-white">Learn more <Chevron className="h-3 w-3" /></TrackedLink>
+          <section className="overflow-hidden rounded-2xl border-2 border-black/20 bg-[#F2E8C9] p-6 sm:p-10 text-black shadow-[6px_8px_0px_#000000]">
+            <div className="-mx-6 -mt-6 sm:-mx-10 sm:-mt-10 mb-8 flex items-center justify-between bg-black px-6 py-2.5 font-mono text-xs font-bold tracking-widest text-[#F5E6C8]">
+              <span className="flex items-center gap-1.5 text-[#39FF14]">
+                <span className="h-2 w-2 rounded-full bg-[#39FF14] animate-pulse" />
+                MAGAZINE LEAD • HI-FI STEREO
+              </span>
+              <span className="text-[#00D9FF]">{lead.category}</span>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 items-center">
+              <div className="overflow-hidden rounded-xl border-2 border-black shadow-[4px_4px_0px_#000]">
+                <Cover post={lead} big />
+              </div>
+              <div>
+                <span className="rounded bg-[#FF1493] px-3 py-1 font-mono text-xs font-bold uppercase text-white shadow-[0_0_10px_rgba(255,20,147,0.6)]">
+                  {lead.category}
+                </span>
+                <h1 className="mt-4 font-head text-3xl sm:text-5xl font-black uppercase tracking-wide text-black leading-tight">
+                  {lead.title}
+                </h1>
+                <p className="mt-4 text-sm sm:text-base leading-relaxed text-black/80">{lead.excerpt}</p>
+                <TrackedLink
+                  slug={lead.slug}
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#FF1493] px-8 py-3.5 font-head text-lg font-bold uppercase tracking-wider text-white shadow-[0_0_20px_rgba(255,20,147,0.7)] hover:bg-[#ff3baf] transition"
+                >
+                  Read Full Tape →
+                </TrackedLink>
+              </div>
             </div>
           </section>
         )}
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_340px]">
+        <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_360px]">
           <div className="space-y-8">
-            <h2 className="border border-black/10 px-5 py-4 text-xl text-navy">{cat || "Latest"} stories</h2>
-            {slice.map((p) => <PostWide key={p.id} post={p} />)}
-            {!slice.length && <p className="border border-dashed border-black/30 p-8 text-center">No more stories here.</p>}
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <h2 className="font-head text-3xl uppercase tracking-wider text-[#00D9FF]">
+                {cat || "Latest"} Stories
+              </h2>
+              <span className="font-mono text-xs text-[#39FF14]">{slice.length} Tapes</span>
+            </div>
+            {slice.map((p) => (
+              <PostWide key={p.id} post={p} />
+            ))}
+            {!slice.length && (
+              <p className="rounded-xl border border-dashed border-white/20 p-8 text-center text-[#F5E6C8]/60">
+                No more stories in this category.
+              </p>
+            )}
             <Pagination page={cur} pages={pages} href={href} />
           </div>
+
           <aside className="space-y-8">
-            <div className="border-t-2 border-navy pt-4">
-              <h2 className="text-xl text-navy">Popular</h2>
-              <div className="mt-4 divide-y divide-black/15">
-                {stories.slice(0, 3).map((p) => (
+            <div className="rounded-2xl border border-white/10 bg-[#160a33] p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+              <h2 className="font-head text-2xl uppercase tracking-wider text-[#FF1493] border-b border-white/10 pb-3">
+                Top Tape Picks
+              </h2>
+              <div className="mt-4 divide-y divide-white/10">
+                {stories.slice(0, 4).map((p) => (
                   <div key={p.id} className="py-4 first:pt-0">
-                    <TrackedLink slug={p.slug} className="block text-lg leading-snug text-navy hover:underline">{p.title}</TrackedLink>
-                    <p className="mt-2 line-clamp-3 font-serif text-sm leading-5">{p.excerpt}</p>
-                    <Btn href={`/posts/${p.slug}`} className="mt-3 px-3 py-1 text-xs">Read more <Chevron className="h-3 w-3" /></Btn>
+                    <span className="font-mono text-[10px] uppercase text-[#39FF14]">{p.category}</span>
+                    <TrackedLink
+                      slug={p.slug}
+                      className="mt-1 block font-head text-xl font-bold uppercase tracking-wide text-[#F5E6C8] hover:text-[#FF1493] transition"
+                    >
+                      {p.title}
+                    </TrackedLink>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="bg-[#f1f4f7] p-6">
-              <h2 className="text-xl text-navy">Share a TV memory</h2>
-              <MailForm subject="A TV memory" kind="memory" fields={[{ name: "name", label: "Name" }, { name: "email", label: "Email", type: "email", required: true }, { name: "memory", label: "Your memory", type: "textarea" }]} button="Send" className="mt-4 [&_input]:bg-white [&_textarea]:bg-white" />
+
+            <div className="rounded-2xl border border-[#00D9FF]/40 bg-[#10082b] p-6 shadow-[0_0_20px_rgba(0,217,255,0.2)]">
+              <h2 className="font-head text-2xl uppercase tracking-wider text-[#00D9FF]">Share a TV Memory</h2>
+              <p className="mt-1 text-xs text-[#F5E6C8]/75">Got a story from Friday night TGIF or Saturday cartoons?</p>
+              <MailForm
+                subject="A TV memory"
+                kind="memory"
+                fields={[
+                  { name: "name", label: "Your name" },
+                  { name: "email", label: "Email", type: "email", required: true },
+                  { name: "memory", label: "Your memory", type: "textarea" },
+                ]}
+                button="SUBMIT MEMORY"
+                className="mt-4"
+              />
             </div>
           </aside>
         </div>
       </main>
       <FooterColumns />
-    </>
+    </div>
   );
 }

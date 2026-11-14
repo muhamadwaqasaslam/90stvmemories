@@ -3,7 +3,7 @@ import { SITE_URL } from "./site";
 export const SITE_NAME = "90s TV Memories";
 export const SITE_TAGLINE = "Saturday morning cartoons, TGIF sitcoms, VHS rentals and the TV moments that raised a generation";
 export const DEFAULT_DESC =
-  "90s TV Memories is an independent fan site for American 90s nostalgia: Saturday morning cartoons, TGIF sitcoms, VHS rentals, and the shows and gadgets that shaped a generation of US kids.";
+  "Explore 90s TV nostalgia: TGIF sitcoms, Saturday morning cartoons, cast then and now updates, and untold secrets behind the iconic shows of the 1990s decade.";
 export const OG_IMAGE = "/images/stock/banner.jpg";
 
 export const abs = (path: string) => `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;

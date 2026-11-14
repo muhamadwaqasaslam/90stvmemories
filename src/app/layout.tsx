@@ -19,11 +19,14 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "90s TV Memories | 90s Cartoons, Sitcoms & VHS Nostalgia", template: "%s | 90s TV Memories" },
+  title: {
+    default: "90s TV Memories | Best 90s Shows, TGIF, Cartoons & Cast Then and Now [2026]",
+    template: "%s | 90s TV Memories",
+  },
   description: DEFAULT_DESC,
   applicationName: "90s TV Memories",
   verification: { google: "google623db4c757b2ba52" },
-  keywords: ["90s TV", "90s nostalgia", "Saturday morning cartoons", "TGIF sitcoms", "VHS rentals", "1990s television", "90s kids", "retro TV shows"],
+  keywords: ["90s TV", "90s nostalgia", "Saturday morning cartoons", "TGIF sitcoms", "VHS rentals", "1990s television", "90s kids", "retro TV shows", "cast then and now"],
   authors: [{ name: "90s TV Memories", url: SITE_URL }],
   creator: "90s TV Memories",
   publisher: "90s TV Memories",
@@ -37,7 +40,7 @@ export const metadata: Metadata = {
     siteName: "90s TV Memories",
     locale: "en_US",
     url: "/",
-    title: "90s TV Memories | 90s Cartoons, Sitcoms & VHS Nostalgia",
+    title: "90s TV Memories | Best 90s Shows, TGIF, Cartoons & Cast Then and Now [2026]",
     description: DEFAULT_DESC,
     images: [
       {
@@ -45,14 +48,19 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         type: "image/jpeg",
-        alt: "A retro 90s television set and nostalgia memories",
+        alt: "90s TV Memories - Retro 90s television set and TGIF memories",
       },
     ],
   },
-  twitter: { card: "summary_large_image", title: "90s TV Memories", description: DEFAULT_DESC, images: [OG_IMAGE] },
+  twitter: {
+    card: "summary_large_image",
+    title: "90s TV Memories | Best 90s Shows, TGIF, Cartoons & Cast Then and Now [2026]",
+    description: DEFAULT_DESC,
+    images: [OG_IMAGE],
+  },
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#2b4886" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0a0a23" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
