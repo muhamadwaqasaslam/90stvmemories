@@ -85,30 +85,57 @@ export default async function PostPage({ params }: Props) {
             breadcrumbLd([["Home", "/"], ["Stories", "/blog"], [post.title, `/posts/${post.slug}`]]),
           ]}
         />
-        {/* grey banner with centred title */}
-        <section className="relative grid min-h-64 place-items-center bg-[#8c8c8c] px-4 py-12 text-center sm:px-6 sm:py-16">
-          <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: `url(${coverUrl(post)})` }} />
-          <div className="relative max-w-4xl">
-            <h1 className="break-words text-2xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">{post.title}</h1>
-            <p className="mt-4 text-white/90">
-              <time dateTime={post.createdAt}>{fmtDate(post.createdAt)}</time> · {readMins(post.content)} min read · {post.category}
+        {/* 90s Retro CRT Banner */}
+        <section className="relative grid min-h-72 place-items-center bg-[#10082b] border-b-2 border-[#FF1493]/30 px-4 py-14 text-center sm:px-6 sm:py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-cover bg-center opacity-25 filter blur-[1px]" style={{ backgroundImage: `url(${coverUrl(post)})` }} />
+          <div className="pointer-events-none absolute inset-0 crt-scanlines opacity-60" />
+          <div className="relative z-10 max-w-4xl">
+            <span className="inline-block -rotate-1 rounded bg-[#FF1493] px-3.5 py-1 font-mono text-xs font-bold uppercase text-white shadow-[2px_2px_0px_#000]">
+              ★ {post.category} • RETRO ARCHIVE ★
+            </span>
+            <h1 className="mt-4 break-words font-[family-name:var(--font-bebas)] text-3xl sm:text-5xl lg:text-6xl tracking-wider text-[#FF1493] text-stroke-cyan drop-shadow-[0_0_20px_rgba(255,20,147,0.5)]">
+              {post.title}
+            </h1>
+            <p className="mt-3 font-mono text-xs sm:text-sm text-[#F5E6C8]/90">
+              <time dateTime={post.createdAt}>{fmtDate(post.createdAt)}</time> · {readMins(post.content)} min read · High Definition Tape
             </p>
           </div>
         </section>
 
-        <section className="bg-mist pb-20">
-          <div className="mx-auto grid max-w-[1200px] gap-8 px-0 sm:px-6 lg:grid-cols-[1fr_320px]">
-            <article className="-mt-0 min-w-0 bg-white p-5 shadow-[4px_6px_12px_rgba(0,0,0,0.15)] sm:p-12 lg:-mt-0">
-              <Link href="/blog" className="text-sm text-navy hover:underline">← All stories</Link> <span className="text-slate">·</span> <Link href={`/posts/${post.slug}/classic`} className="text-sm text-navy hover:underline">Wide layout</Link>
-              <p className="mb-4 mt-4 font-serif text-xl leading-relaxed text-slate">{post.excerpt}</p>
+        <section className="bg-transparent py-14">
+          <div className="mx-auto grid max-w-[1200px] gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_340px]">
+            {/* Main Article: Beige VHS Cassette Slipcover */}
+            <article className="overflow-hidden rounded-2xl border-2 border-black bg-[#F2E8C9] text-[#1a0a3a] p-6 sm:p-12 shadow-[8px_8px_0px_#000]">
+              {/* VHS Black Top Header Strip */}
+              <div className="-mx-6 -mt-6 sm:-mx-12 sm:-mt-12 mb-8 flex items-center justify-between border-b-2 border-black bg-black px-6 py-2.5 font-mono text-xs font-bold tracking-widest text-[#FFD24A]">
+                <span className="flex items-center gap-2">
+                  <span>📼</span>
+                  <span>VHS • SP • 120</span>
+                </span>
+                <span className="text-[#00D9FF]">[PLAY] 0:19:90</span>
+              </div>
+
+              <div className="flex items-center justify-between text-xs font-mono font-bold text-[#6a2cff]">
+                <Link href="/blog" className="hover:underline flex items-center gap-1">← Back to All Tapes</Link>
+                <Link href={`/posts/${post.slug}/classic`} className="hover:underline">Wide Cinema View →</Link>
+              </div>
+
+              {/* Cover Image as VHS Tape Cover */}
+              <div className="my-6 relative overflow-hidden rounded-xl border-2 border-black shadow-[4px_4px_0px_#000] aspect-[16/9] bg-black">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={coverUrl(post)} alt={post.title} className="h-full w-full object-cover" />
+                <div className="pointer-events-none absolute inset-0 crt-scanlines opacity-25" />
+              </div>
+
+              <p className="mb-4 font-serif text-xl leading-relaxed text-[#2d224d] font-semibold">{post.excerpt}</p>
 
               {/* High-Visibility Facebook Share Bar (Top) */}
-              <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#1877F2]/30 bg-[#1877F2]/5 p-3.5 sm:px-5">
+              <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#1877F2]/40 bg-[#1877F2]/10 p-3.5 sm:px-5">
                 <div className="flex items-center gap-2.5">
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1877F2] text-white shrink-0">
                     <Facebook className="h-4 w-4" />
                   </span>
-                  <p className="font-sans text-xs font-semibold text-slate-800 sm:text-sm">
+                  <p className="font-sans text-xs font-semibold text-slate-900 sm:text-sm">
                     Loved this 90s story? Share with your friends on Facebook!
                   </p>
                 </div>
@@ -126,7 +153,7 @@ export default async function PostPage({ params }: Props) {
               <Prose content={post.content} />
 
               {/* Facebook Fan Clubs & Viral Share Banner */}
-              <div className="my-8 rounded-xl border-2 border-[#1877F2]/40 bg-gradient-to-r from-blue-50/60 via-indigo-50/40 to-white p-6 text-center shadow-sm">
+              <div className="my-8 rounded-xl border-2 border-[#1877F2]/40 bg-gradient-to-r from-blue-50/80 via-indigo-50/60 to-white p-6 text-center shadow-sm">
                 <span className="inline-block rounded-full bg-[#1877F2] px-3.5 py-1 font-condensed text-xs font-bold uppercase tracking-wider text-white">
                   Join 10,000+ 90s TV Fans
                 </span>
@@ -168,7 +195,7 @@ export default async function PostPage({ params }: Props) {
               </div>
 
               {/* High-CTR Monetag Direct Ad Banner inside Article */}
-              <div className="my-10 rounded-lg border-2 border-dashed border-[#2b4886]/30 bg-amber-50/60 p-6 text-center shadow-sm">
+              <div className="my-10 rounded-lg border-2 border-dashed border-[#2b4886]/40 bg-amber-50/80 p-6 text-center shadow-sm">
                 <span className="inline-block rounded bg-amber-400 px-3 py-1 font-condensed text-xs font-bold uppercase tracking-wider text-slate-900">
                   Trending Nostalgia
                 </span>
@@ -187,13 +214,13 @@ export default async function PostPage({ params }: Props) {
               </div>
 
               {post.tags && post.tags.length > 0 && (
-                <div className="mt-10 border-t border-slate/15 pt-6">
-                  <p className="text-xs font-bold uppercase tracking-wider text-slate/70">Tags &amp; Keywords</p>
+                <div className="mt-10 border-t border-black/15 pt-6">
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-700">Tags &amp; Keywords</p>
                   <div className="mt-2.5 flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center rounded-full bg-slate/10 px-3 py-1 text-xs font-semibold text-navy hover:bg-navy hover:text-white transition-colors"
+                        className="inline-flex items-center rounded-md border border-black/30 bg-black/5 px-3 py-1 text-xs font-semibold text-navy hover:bg-navy hover:text-white transition-colors"
                       >
                         #{tag}
                       </span>
@@ -203,25 +230,26 @@ export default async function PostPage({ params }: Props) {
               )}
             </article>
 
-            <aside className="space-y-8 px-4 sm:px-0 lg:pt-16">
+            {/* Sidebar */}
+            <aside className="space-y-8 px-4 sm:px-0">
               {/* Facebook Fan Pages Sidebar Box */}
-              <div className="rounded border-2 border-[#1877F2]/30 bg-white p-5 shadow-[4px_6px_12px_rgba(0,0,0,0.12)]">
-                <div className="flex items-center gap-2 border-b border-black/10 pb-3">
+              <div className="rounded-2xl border-2 border-[#1877F2]/50 bg-[#12082b] p-5 shadow-[6px_6px_0px_#1877F2] text-white">
+                <div className="flex items-center gap-2 border-b border-white/10 pb-3">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#1877F2] text-white">
                     <Facebook className="h-3.5 w-3.5" />
                   </span>
-                  <h3 className="font-serif text-lg font-bold text-navy">Facebook Communities</h3>
+                  <h3 className="font-[family-name:var(--font-bebas)] text-xl tracking-wide text-white">Facebook Communities</h3>
                 </div>
 
                 {/* Page 1: Beverly Hills 90210 */}
-                <div className="mt-4 rounded-lg border border-slate/20 bg-slate-50 p-3.5">
-                  <p className="font-sans text-sm font-bold text-navy">{FB_PAGES.beverlyHills.name}</p>
-                  <p className="mt-0.5 text-xs text-slate">{FB_PAGES.beverlyHills.followers} Followers • Active Group</p>
+                <div className="mt-4 rounded-xl border border-white/10 bg-black/40 p-3.5">
+                  <p className="font-sans text-sm font-bold text-[#00D9FF]">{FB_PAGES.beverlyHills.name}</p>
+                  <p className="mt-0.5 text-xs text-[#F5E6C8]/80">{FB_PAGES.beverlyHills.followers} Followers • Active Group</p>
                   <a
                     href={FB_PAGES.beverlyHills.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded bg-[#1877F2] py-2 text-xs font-bold text-white shadow hover:bg-[#166fe5] transition"
+                    className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#1877F2] py-2 text-xs font-bold text-white shadow hover:scale-105 transition"
                   >
                     <Facebook className="h-3 w-3" />
                     <span>Follow 90210 Page</span>
@@ -229,14 +257,14 @@ export default async function PostPage({ params }: Props) {
                 </div>
 
                 {/* Page 2: Full House */}
-                <div className="mt-3 rounded-lg border border-slate/20 bg-slate-50 p-3.5">
-                  <p className="font-sans text-sm font-bold text-navy">{FB_PAGES.fullHouse.name}</p>
-                  <p className="mt-0.5 text-xs text-slate">{FB_PAGES.fullHouse.followers} Followers • TGIF Nostalgia</p>
+                <div className="mt-3 rounded-xl border border-white/10 bg-black/40 p-3.5">
+                  <p className="font-sans text-sm font-bold text-[#FFD24A]">{FB_PAGES.fullHouse.name}</p>
+                  <p className="mt-0.5 text-xs text-[#F5E6C8]/80">{FB_PAGES.fullHouse.followers} Followers • TGIF Nostalgia</p>
                   <a
                     href={FB_PAGES.fullHouse.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded bg-[#1877F2] py-2 text-xs font-bold text-white shadow hover:bg-[#166fe5] transition"
+                    className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#1877F2] py-2 text-xs font-bold text-white shadow hover:scale-105 transition"
                   >
                     <Facebook className="h-3 w-3" />
                     <span>Follow Full House Page</span>
@@ -245,30 +273,26 @@ export default async function PostPage({ params }: Props) {
               </div>
 
               {/* Sidebar High-CTR Direct Ad Box */}
-              <div className="rounded border-2 border-navy/20 bg-gradient-to-br from-white to-amber-50/50 p-6 text-center shadow-[4px_6px_12px_rgba(0,0,0,0.12)]">
-                <span className="font-condensed text-xs font-bold uppercase tracking-widest text-slate/60">Featured Archive</span>
-                <h3 className="mt-2 font-serif text-xl font-bold text-navy">90s Retro Vault</h3>
-                <p className="mt-2 text-xs leading-relaxed text-slate">Exclusive cast reunions, tragic endings, and forgotten shows you loved.</p>
+              <div className="rounded-2xl border-2 border-[#FF1493]/50 bg-gradient-to-br from-[#12082b] to-[#1f0d3d] p-6 text-center shadow-[6px_6px_0px_#FF1493] text-white">
+                <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#FFD24A]">Featured Archive</span>
+                <h3 className="mt-2 font-[family-name:var(--font-bebas)] text-2xl tracking-wide text-[#FF1493]">90s Retro Vault</h3>
+                <p className="mt-2 text-xs leading-relaxed text-[#F5E6C8]/80">Exclusive cast reunions, tragic endings, and forgotten shows you loved.</p>
                 <a
                   href="https://uplcm.com/4/12216602"
                   target="_blank"
                   rel="noopener noreferrer nofollow"
-                  className="mt-4 block rounded bg-navy py-3 font-serif text-sm font-bold text-white shadow transition hover:bg-navy/90"
+                  className="mt-4 block rounded-lg border-2 border-black bg-[#FF1493] py-2.5 font-bold uppercase text-xs tracking-wider text-white shadow-[3px_3px_0px_#000] hover:scale-105 transition"
                 >
                   View Exclusive Access »
                 </a>
               </div>
 
               {more.length > 0 && (
-                <div className="bg-white p-6 shadow-[4px_6px_12px_rgba(0,0,0,0.15)]">
-                  <h2 className="text-2xl text-navy">Keep reading</h2>
-                  <div className="mt-4">{more.map((p) => <PostRow key={p.id} post={p} />)}</div>
+                <div className="rounded-2xl border-2 border-black bg-[#F2E8C9] p-5 shadow-[6px_6px_0px_#000] text-[#1a0a3a]">
+                  <h2 className="font-[family-name:var(--font-bebas)] text-2xl tracking-wide text-black border-b border-black/20 pb-2">More VHS Tapes</h2>
+                  <div className="mt-3 space-y-3">{more.map((p) => <PostRow key={p.id} post={p} />)}</div>
                 </div>
               )}
-              <div className="bg-white p-6 shadow-[4px_6px_12px_rgba(0,0,0,0.15)]">
-                <h2 className="text-2xl text-navy">More topics</h2>
-                <Link href="/#stories" className="mt-4 block bg-navy px-4 py-3 text-center font-serif text-lg text-white">Browse all stories »</Link>
-              </div>
             </aside>
           </div>
         </section>

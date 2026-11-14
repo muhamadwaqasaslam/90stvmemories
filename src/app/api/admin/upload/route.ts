@@ -4,7 +4,7 @@ import { adminOk } from "../../../../lib/guard";
 
 export const runtime = "nodejs";
 
-/** Issues short-lived upload tokens so the browser uploads straight to Vercel Blob (works for large videos). */
+/** Issues short-lived upload tokens so the browser uploads straight to Vercel Blob CDN */
 export async function POST(req: Request) {
   const body = (await req.json()) as HandleUploadBody;
 
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const json = await handleUpload({
       body,
       request: req,
+      token: process.env.BLOB_READ_WRITE_TOKEN,
       onBeforeGenerateToken: async () => ({
         allowedContentTypes: [
           "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif",
