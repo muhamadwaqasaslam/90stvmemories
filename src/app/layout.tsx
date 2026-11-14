@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Bungee, Crimson_Text, Inter, Poppins, Roboto_Condensed, Titillium_Web, Yellowtail } from "next/font/google";
+import { Bebas_Neue, Bungee, Crimson_Text, Inter, Poppins, Roboto_Condensed, Titillium_Web, Yellowtail } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "../lib/site";
 import { DEFAULT_DESC, JsonLd, OG_IMAGE, organizationLd, websiteLd } from "../lib/seo";
 
+const bebas = Bebas_Neue({ weight: "400", subsets: ["latin"], variable: "--font-bebas" });
 const condensed = Roboto_Condensed({ weight: ["400", "700"], subsets: ["latin"], variable: "--font-roboto-cond" });
 
 const crimson = Crimson_Text({ weight: ["400", "600"], subsets: ["latin"], variable: "--font-crimson" });
@@ -47,7 +48,7 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-US" className={`${bungee.variable} ${poppins.variable} ${inter.variable} ${crimson.variable} ${titillium.variable} ${yellowtail.variable} ${condensed.variable}`}>
+    <html lang="en-US" className={`${bebas.variable} ${bungee.variable} ${poppins.variable} ${inter.variable} ${crimson.variable} ${titillium.variable} ${yellowtail.variable} ${condensed.variable}`}>
       <body className="min-h-screen overflow-x-hidden" suppressHydrationWarning>
         <Script
           async
